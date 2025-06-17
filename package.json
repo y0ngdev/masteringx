@@ -2,9 +2,9 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
+        "build": "vite build && vite build --config vite.config.filament.js",
         "build:ssr": "vite build && vite build --ssr",
-        "dev": "vite",
+        "dev": "concurrently \"vite\" \"vite --config vite.config.filament.js\"",
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
         "lint": "eslint . --fix"
