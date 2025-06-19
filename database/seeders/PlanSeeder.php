@@ -16,20 +16,12 @@ class PlanSeeder extends Seeder
             'sort_order' => '1',
             'short_description' => 'Perfect for independent creators and instructors',
             'features' => [
-                ' 117 in-depth video tutorials',
-                '
-Over 16 hours of content',
-                '
-
-Advanced topics like JSON, Vectors, and more',
-                '
-Lifetime access
-',
-                '
-Optimize Postgres for production workloads
-',
-                '                   Understand database indexes at a deep level
-    ',
+                '117 in-depth video tutorials',
+                'Over 16 hours of content',
+                'Advanced topics like JSON, Vectors, and more',
+                'Lifetime access',
+                'Optimize Postgres for production workloads',
+                'Understand database indexes at a deep level',
             ],
             'price' => '289',
             'gateway_meta' => [
