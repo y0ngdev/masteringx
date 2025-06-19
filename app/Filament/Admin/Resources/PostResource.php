@@ -90,7 +90,7 @@ class PostResource extends Resource
                     ->label('Author')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status'),
-               
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
