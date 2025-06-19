@@ -15,10 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('short_description');
-            $table->string('stripe_price_id'); // This stores the actual Stripe ID
-
+            $table->json('gateway_meta'); // This stores the plan ID fot Stripe, paddle and many others that would be integrated
             $table->decimal('price', 10, 2);
-            $table->enum('billing_period',['monthly','yearly','lifetime'])->default('lifetime'); // monthly, yearly, etc
+            $table->enum('billing_period',['monthly','yearly','lifetime'])->default('lifetime');
             $table->json('features')->nullable();
             $table->boolean('is_active')->default(true);
             $table->boolean('is_featured')->default(false);
