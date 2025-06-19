@@ -2,12 +2,12 @@
 
 namespace App\Filament\Admin\Pages;
 
-use App\Models\Setting;
+use App\Services\SettingsManager;
+use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Pages\Page;
-use Filament\Actions\Action;
-use Illuminate\Support\Facades\Cache;
+use Jackiedo\DotenvEditor\Facades\DotenvEditor;
 
 class Settings extends Page
 {
@@ -23,9 +23,22 @@ class Settings extends Page
 
     public ?array $data = [];
 
-    public function mount(): void
+    public function mount(SettingsManager $settings): void
     {
-        $this->form->fill($this->getSettings());
+
+        $this->form->fill([
+            'email' => [
+
+                    'driver' => config('mail.default'),
+                    'host' => config('mail.mailers.smtp.host'),
+                    'port' => config('mail.mailers.smtp.port'),
+                    'scheme' => config('mail.mailers.smtp.scheme'),
+                    'username' => config('mail.mailers.smtp.username'),
+                    'password' => config('mail.mailers.smtp.password'),
+                    'email' => config('mail.from.address'),
+                    'name' => config('mail.from.name'),
+                ] + $this->getSettings($settings)
+        ]);
     }
 
     public function form(Form $form): Form
@@ -38,7 +51,8 @@ class Settings extends Page
                             ->schema([
                                 Forms\Components\TextInput::make('site_name')
                                     ->label('Site Name')
-                                    ->required(),
+//                                    ->required()
+                                ,
                                 Forms\Components\TextInput::make('site_description')
                                     ->label('Site Description'),
                                 Forms\Components\FileUpload::make('site_logo')
@@ -51,21 +65,27 @@ class Settings extends Page
                             ->schema([
                                 Forms\Components\TextInput::make('hero_title')
                                     ->label('Hero Title')
-                                    ->required(),
+//                                    ->required()
+                                ,
                                 Forms\Components\TextInput::make('hero_subtitle')
                                     ->label('Hero Subtitle')
-                                    ->required(),
+//                                    ->required()
+                                ,
                                 Forms\Components\TextInput::make('hero_cta_text')
                                     ->label('Hero CTA Text')
-                                    ->required(),
+//                                    ->required()
+                                ,
                                 Forms\Components\Repeater::make('features')
                                     ->schema([
                                         Forms\Components\TextInput::make('title')
-                                            ->required(),
+//                                            ->required()
+                                        ,
                                         Forms\Components\TextInput::make('description')
-                                            ->required(),
+//                                            ->required()
+                                        ,
                                         Forms\Components\TextInput::make('icon')
-                                            ->required(),
+//                                            ->required()
+                                        ,
                                     ])
                                     ->columns(3)
                                     ->defaultItems(3)
@@ -76,21 +96,27 @@ class Settings extends Page
                             ->schema([
                                 Forms\Components\TextInput::make('pricing_title')
                                     ->label('Pricing Title')
-                                    ->required(),
+//                                    ->required()
+                                ,
                                 Forms\Components\TextInput::make('pricing_subtitle')
                                     ->label('Pricing Subtitle')
-                                    ->required(),
+//                                    ->required()
+                                ,
                                 Forms\Components\Repeater::make('plans')
                                     ->schema([
                                         Forms\Components\TextInput::make('name')
-                                            ->required(),
+//                                            ->required()
+                                        ,
                                         Forms\Components\TextInput::make('price')
                                             ->numeric()
-                                            ->required(),
+//                                            ->required()
+                                        ,
                                         Forms\Components\TextInput::make('description')
-                                            ->required(),
+//                                            ->required()
+                                        ,
                                         Forms\Components\TagsInput::make('features')
-                                            ->required(),
+//                                            ->required()
+                                        ,
                                     ])
                                     ->columns(2)
                                     ->defaultItems(3)
@@ -101,52 +127,35 @@ class Settings extends Page
                             ->schema([
                                 Forms\Components\TextInput::make('faq_title')
                                     ->label('FAQ Title')
-                                    ->required(),
+//                                    ->required()
+                                ,
                                 Forms\Components\Repeater::make('faq_items')
                                     ->schema([
                                         Forms\Components\TextInput::make('question')
-                                            ->required(),
+//                                            ->required()
+                                        ,
                                         Forms\Components\Textarea::make('answer')
-                                            ->required(),
+//                                            ->required()
+                                        ,
                                     ])
                                     ->columns(2)
                                     ->defaultItems(3)
                                     ->reorderable(),
                             ]),
 
-                        Forms\Components\Tabs\Tab::make('Testimonials')
-                            ->schema([
-                                Forms\Components\TextInput::make('testimonials_title')
-                                    ->label('Testimonials Title')
-                                    ->required(),
-                                Forms\Components\Repeater::make('testimonials')
-                                    ->schema([
-                                        Forms\Components\TextInput::make('name')
-                                            ->required(),
-                                        Forms\Components\TextInput::make('position')
-                                            ->required(),
-                                        Forms\Components\Textarea::make('content')
-                                            ->required(),
-                                        Forms\Components\FileUpload::make('avatar')
-                                            ->image()
-                                            ->directory('testimonials'),
-                                    ])
-                                    ->columns(2)
-                                    ->defaultItems(3)
-                                    ->reorderable(),
-                            ]),
 
                         Forms\Components\Tabs\Tab::make('Payments')
                             ->schema([
-                                Forms\Components\Select::make('default_payment_provider')
-                                    ->label('Default Payment Provider')
-                                    ->options(fn () => \App\Models\PaymentProvider::pluck('name', 'code'))
-                                    ->required(),
+//                                Forms\Components\Select::make('default_payment_provider')
+//                                    ->label('Default Payment Provider')
+//                                    ->options(fn () => \App\Models\PaymentProvider::pluck('name', 'code'))
+//                                    ->required(),
 
                                 Forms\Components\TextInput::make('currency')
                                     ->label('Default Currency')
                                     ->default('USD')
-                                    ->required(),
+//                                    ->required()
+                                ,
 
                                 Forms\Components\Toggle::make('enable_trial')
                                     ->label('Enable Trial Period')
@@ -157,7 +166,7 @@ class Settings extends Page
                                     ->numeric()
                                     ->default(14)
                                     ->required()
-                                    ->visible(fn (Forms\Get $get) => $get('enable_trial')),
+                                    ->visible(fn(Forms\Get $get) => $get('enable_trial')),
 
                                 Forms\Components\Toggle::make('enable_coupons')
                                     ->label('Enable Coupons')
@@ -168,78 +177,52 @@ class Settings extends Page
                                     ->default(true),
                             ]),
 
-                        Forms\Components\Tabs\Tab::make('Notifications')
+                        Forms\Components\Tabs\Tab::make('Email Configuration')
                             ->schema([
-                                Forms\Components\Toggle::make('notify_subscription_created')
-                                    ->label('Notify on Subscription Created')
-                                    ->default(true),
+                                Forms\Components\Select::make('email.driver')
+                                    ->label('Mail Driver')
+                                    ->options([
+                                        'log' => 'Log',
+                                        'smtp' => 'SMTP',
+                                    ])
+                                    ->required(),
 
-                                Forms\Components\Toggle::make('notify_subscription_cancelled')
-                                    ->label('Notify on Subscription Cancelled')
-                                    ->default(true),
 
-                                Forms\Components\Toggle::make('notify_payment_failed')
-                                    ->label('Notify on Payment Failed')
-                                    ->default(true),
+                                Forms\Components\TextInput::make('email.host')
+                                    ->label('SMTP Host'),
 
-                                Forms\Components\Toggle::make('notify_trial_ending')
-                                    ->label('Notify on Trial Ending')
-                                    ->default(true),
 
-                                Forms\Components\TextInput::make('trial_ending_days')
-                                    ->label('Days Before Trial Ends to Notify')
-                                    ->numeric()
-                                    ->default(3)
-                                    ->required()
-                                    ->visible(fn (Forms\Get $get) => $get('notify_trial_ending')),
-                            ]),
+                                Forms\Components\TextInput::make('email.port')
+                                    ->label('SMTP Port'),
 
-                        Forms\Components\Tabs\Tab::make('Email')
-                            ->schema([
-                                Forms\Components\TextInput::make('mail_from_address')
+
+                                Forms\Components\Select::make('email.scheme')
+                                    ->label('SMTP Scheme')
+                                    ->options([
+                                        'null' => 'null',
+                                        'smtp' => 'SMTP',
+                                        'smtps' => 'SMTPS',
+                                    ]),
+
+
+                                Forms\Components\TextInput::make('email.name')
+                                    ->label('From Name')
+                                    ->required(),
+
+
+                                Forms\Components\TextInput::make('email.email')
                                     ->label('From Email Address')
                                     ->email()
                                     ->required(),
 
-                                Forms\Components\TextInput::make('mail_from_name')
-                                    ->label('From Name')
-                                    ->required(),
+                                Forms\Components\TextInput::make('email.username')
+                                    ->label('SMTP Username'),
 
-                                Forms\Components\Select::make('mail_mailer')
-                                    ->label('Mail Driver')
-                                    ->options([
-                                        'smtp' => 'SMTP',
-                                        'mailgun' => 'Mailgun',
-                                        'ses' => 'Amazon SES',
-                                        'postmark' => 'Postmark',
-                                    ])
-                                    ->required(),
-
-                                Forms\Components\TextInput::make('mail_host')
-                                    ->label('SMTP Host')
-                                    ->visible(fn (Forms\Get $get) => $get('mail_mailer') === 'smtp'),
-
-                                Forms\Components\TextInput::make('mail_port')
-                                    ->label('SMTP Port')
-                                    ->numeric()
-                                    ->visible(fn (Forms\Get $get) => $get('mail_mailer') === 'smtp'),
-
-                                Forms\Components\TextInput::make('mail_username')
-                                    ->label('SMTP Username')
-                                    ->visible(fn (Forms\Get $get) => $get('mail_mailer') === 'smtp'),
-
-                                Forms\Components\TextInput::make('mail_password')
+                                Forms\Components\TextInput::make('email.password')
                                     ->label('SMTP Password')
-                                    ->password()
-                                    ->visible(fn (Forms\Get $get) => $get('mail_mailer') === 'smtp'),
+                                    ->password(),
 
-                                Forms\Components\Select::make('mail_encryption')
-                                    ->label('SMTP Encryption')
-                                    ->options([
-                                        'tls' => 'TLS',
-                                        'ssl' => 'SSL',
-                                    ])
-                                    ->visible(fn (Forms\Get $get) => $get('mail_mailer') === 'smtp'),
+
                             ]),
                     ])
                     ->columnSpanFull(),
@@ -257,25 +240,82 @@ class Settings extends Page
         ];
     }
 
-    public function save(): void
+    public function save(SettingsManager $settings): void
     {
         $data = $this->form->getState();
 
+        if ($data['email']) {
+            $d = $data['email'];
+
+            $env = DotenvEditor::load();
+            if ($env->getValue('MAIL_MAILER') !== $d['driver']) {
+
+                $env->setKey('MAIL_MAILER', $d['driver']);
+                $env->save();
+            }
+
+            if ($env->getValue('MAIL_SCHEME') !==$d['scheme']) {
+
+                $env->setKey('MAIL_SCHEME',$d['scheme']);
+                $env->save();
+            }
+
+            if ($env->getValue('MAIL_HOST') !==$d['host'] ) {
+
+                $env->setKey('MAIL_HOST',$d['host']);
+                $env->save();
+            }
+
+            if ($env->getValue('MAIL_PORT') !== $d['port']) {
+
+                $env->setKey('MAIL_PORT',$d['port']);
+                $env->save();
+            }
+
+            if ($env->getValue('MAIL_USERNAME') !== $d['username']) {
+
+                $env->setKey('MAIL_USERNAME', $d['username']);
+                $env->save();
+            }
+
+            if ($env->getValue('MAIL_PASSWORD') !==$d['password']) {
+
+                $env->setKey('MAIL_PASSWORD',$d['password'] );
+                $env->save();
+            }
+
+            if ($env->getValue('MAIL_FROM_ADDRESS') !== $d['email']) {
+
+                $env->setKey('MAIL_FROM_ADDRESS', $d['email']);
+                $env->save();
+            }
+            if ($env->getValue('MAIL_FROM_NAME') !== $d['name']) {
+
+                $env->setKey('MAIL_FROM_NAME', $d['name']);
+                $env->save();
+            }
+
+        }
         foreach ($data as $key => $value) {
-            Setting::set($key, $value);
+            $type = match (true) {
+                is_bool($value) => 'bool',
+                is_int($value) => 'int',
+                is_array($value) => 'json',
+                default => 'string',
+            };
+            $settings->set($key, $value, $type);
         }
 
-        Cache::forget('settings');
+        \Cache::forget('settings');
 
         $this->notify('success', 'Settings saved successfully');
     }
 
-    protected function getSettings(): array
+    protected function getSettings(SettingsManager $settings = null): array
     {
-        return Cache::remember('settings', 3600, function () {
-            return Setting::all()
-                ->mapWithKeys(fn ($setting) => [$setting->key => $setting->value])
-                ->toArray();
+        $settings ??= app(SettingsManager::class);
+        return \Cache::remember('settings', 3600, function () use ($settings) {
+            return $settings->all();
         });
     }
 }

@@ -24,22 +24,17 @@ class TestimonialResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('course_id')
-                    ->relationship('course', 'title')
-                    ->required()
-                    ->searchable()
-                    ->preload(),
+
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('title')
+                Forms\Components\TextInput::make('company')
+                    ->label('Role at Company')
                     ->maxLength(255),
                 Forms\Components\RichEditor::make('content')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\FileUpload::make('avatar')
-                    ->image()
-                    ->directory('testimonials'),
+
                 Forms\Components\TextInput::make('order')
                     ->numeric()
                     ->default(0),
@@ -50,6 +45,10 @@ class TestimonialResource extends Resource
                     ])
                     ->required()
                     ->default('draft'),
+                Forms\Components\FileUpload::make('avatar')
+                    ->image()
+                    ->directory('testimonials')
+                ->columnSpanFull(),
             ]);
     }
 
@@ -59,13 +58,11 @@ class TestimonialResource extends Resource
             ->reorderable('order')
             ->defaultSort('order')
             ->columns([
-                Tables\Columns\TextColumn::make('course.title')
-                    ->searchable()
-                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('title')
+                Tables\Columns\TextColumn::make('company')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\ImageColumn::make('avatar')

@@ -11,18 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-
-        Schema::create('videos', function (Blueprint $table): void {
+        Schema::create('lessons', function (Blueprint $table): void {
             $table->id();
+            $table->foreignId('module_id')->constrained()->cascadeOnDelete();
             $table->string('vimeo_id')->unique();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->string('url');
-            $table->string('embed_url');
-            $table->string('thumbnail_url')->nullable();
             $table->integer('duration')->nullable();
-            $table->string('status')->default('processing');
-            $table->morphs('videoable');
+            $table->unsignedInteger('position')->default(0);
+            $table->enum('status', ['processing', 'ready', 'failed'])->default('processing');
+            $table->boolean('is_published')->default(false);
             $table->timestamps();
         });
     }

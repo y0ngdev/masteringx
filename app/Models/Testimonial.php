@@ -6,5 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Testimonial extends Model
 {
-    //
+    /**
+     * The attributes that are not mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $guarded = [
+        'id',
+    ];
 }
