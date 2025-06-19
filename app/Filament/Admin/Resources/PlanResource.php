@@ -3,7 +3,6 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\PlanResource\Pages;
-use App\Filament\Admin\Resources\PlanResource\RelationManagers;
 use App\Models\Plan;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
@@ -71,9 +70,7 @@ class PlanResource extends Resource
                             ->addable(false)
                             ->deletable(false)
                             ->keyPlaceholder('stripe')
-                            ->valuePlaceholder('price_abc123')
-
-
+                            ->valuePlaceholder('price_abc123'),
 
                     ])->columns(2),
 
@@ -89,7 +86,6 @@ class PlanResource extends Resource
                             ->default(false),
 
                     ])->columns(2),
-
 
             ]);
     }

@@ -19,5 +19,4 @@ class Plan extends Model
         'features' => 'array',
         'gateway_meta' => 'array',
     ];
-
 }
