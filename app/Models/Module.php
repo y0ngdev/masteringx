@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Module extends Model
 {
-
     /**
      * The attributes that are not mass assignable.
      *
@@ -16,6 +15,7 @@ class Module extends Model
     protected $guarded = [
         'id',
     ];
+
     public function lessons(): HasMany
     {
         return $this->hasMany(Lesson::class)->orderBy('order');

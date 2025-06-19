@@ -23,24 +23,23 @@ class ModuleResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-
-        ->schema([
-              Forms\Components\TextInput::make('title')
-            ->required()
-            ->maxLength(255),
-        Forms\Components\TextInput::make('order')
-            ->required()
-            ->unique()
-            ->numeric()
-            ->default(0),
-        Forms\Components\Select::make('status')
-            ->options([
-                'draft' => 'Draft',
-                'published' => 'Published',
-            ])
-            ->required()
-            ->default('draft'),
-    ]);
+            ->schema([
+                Forms\Components\TextInput::make('title')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('order')
+                    ->required()
+                    ->unique()
+                    ->numeric()
+                    ->default(0),
+                Forms\Components\Select::make('status')
+                    ->options([
+                        'draft' => 'Draft',
+                        'published' => 'Published',
+                    ])
+                    ->required()
+                    ->default('draft'),
+            ]);
 
     }
 

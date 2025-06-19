@@ -4,8 +4,6 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\UserSubscriptionResource\Pages;
 use App\Models\Subscription;
-use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -19,7 +17,6 @@ class UserSubscriptionResource extends Resource
     protected static ?string $navigationGroup = 'Subscriptions';
 
     protected static ?int $navigationSort = 2;
-
 
     public static function table(Table $table): Table
     {
@@ -35,7 +32,7 @@ class UserSubscriptionResource extends Resource
 
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'active' => 'success',
                         'cancelled' => 'danger',
                         'expired' => 'warning',
@@ -67,15 +64,15 @@ class UserSubscriptionResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-//                Tables\Filters\SelectFilter::make('status')
-//                    ->options([
-//                        'active' => 'Active',
-//                        'cancelled' => 'Cancelled',
-//                        'expired' => 'Expired',
-//                        'pending' => 'Pending',
-//                    ]),
-//                Tables\Filters\SelectFilter::make('subscription_plan_id')
-//                    ->relationship('plan', 'name'),
+                //                Tables\Filters\SelectFilter::make('status')
+                //                    ->options([
+                //                        'active' => 'Active',
+                //                        'cancelled' => 'Cancelled',
+                //                        'expired' => 'Expired',
+                //                        'pending' => 'Pending',
+                //                    ]),
+                //                Tables\Filters\SelectFilter::make('subscription_plan_id')
+                //                    ->relationship('plan', 'name'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

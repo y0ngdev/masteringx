@@ -3,7 +3,6 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\PostResource\Pages;
-use App\Filament\Admin\Resources\PostResource\RelationManagers;
 use App\Models\Post;
 use App\Models\User;
 use Filament\Forms;
@@ -12,9 +11,7 @@ use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
-
 
 class PostResource extends Resource
 {
@@ -32,7 +29,7 @@ class PostResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('title')
                     ->live(onBlur: true)
-                    ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', Str::slug($state)))
+                    ->afterStateUpdated(fn (Set $set, ?string $state): mixed => $set('slug', Str::slug($state)))
                     ->required()
                     ->maxLength(191),
                 Forms\Components\TextInput::make('slug')
@@ -42,8 +39,7 @@ class PostResource extends Resource
                 Forms\Components\RichEditor::make('body')
                     ->required()
                     ->columnSpanFull()
-                    ->afterStateUpdated(fn(Set $set, ?string $state) => $set('excerpt', Str::excerpt($state)))
-                ,
+                    ->afterStateUpdated(fn (Set $set, ?string $state): mixed => $set('excerpt', Str::excerpt($state))),
                 Forms\Components\Textarea::make('excerpt')
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('seo_title')
@@ -52,7 +48,7 @@ class PostResource extends Resource
                     ->label('Author')
                     ->options(
                         User::all()
-                            ->mapWithKeys(fn($user) => [
+                            ->mapWithKeys(fn ($user) => [
                                 $user->id => $user->name
                                     ?? $user->username
                                         ?? $user->email,
@@ -76,7 +72,6 @@ class PostResource extends Resource
 
             ]);
     }
-
 
     public static function table(Table $table): Table
     {
@@ -105,7 +100,7 @@ class PostResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+                Tables\Actions\DeleteAction::make(),
 
             ])
             ->bulkActions([
@@ -114,7 +109,6 @@ class PostResource extends Resource
                 ]),
             ]);
     }
-
 
     public static function getRelations(): array
     {

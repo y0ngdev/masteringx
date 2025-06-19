@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
 
-        Schema::create('videos', function (Blueprint $table) {
+        Schema::create('videos', function (Blueprint $table): void {
             $table->id();
             $table->string('vimeo_id')->unique();
             $table->string('title');

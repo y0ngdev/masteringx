@@ -3,7 +3,6 @@
 namespace App\Filament\Admin\Resources\UserSubscriptionResource\Pages;
 
 use App\Filament\Admin\Resources\UserSubscriptionResource;
-use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListUserSubscriptions extends ListRecords
