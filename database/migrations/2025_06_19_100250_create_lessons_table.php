@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->integer('duration')->nullable();
+            $table->boolean('is_pre-viewable')->default(false);
             $table->unsignedInteger('position')->default(0);
             $table->enum('status', ['processing', 'ready', 'failed'])->default('processing');
             $table->boolean('is_published')->default(false);

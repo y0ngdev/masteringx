@@ -45,16 +45,20 @@ class LessonResource extends Resource
                 Forms\Components\TextInput::make('order')
                     ->numeric()
                     ->default(0),
-                Forms\Components\Toggle::make('is_free')
+                Forms\Components\Toggle::make('is_pre-viewable')
+                    ->label('Free Preview')
+                    ->default(false),
+                Forms\Components\Toggle::make('is_published')
                     ->label('Free Preview')
                     ->default(false),
                 Forms\Components\Select::make('status')
                     ->options([
-                        'draft' => 'Draft',
-                        'published' => 'Published',
+
+                        'processing' => 'Processing',
+                        'successful' => 'Successful',
+                        'failed' => 'Failed'
                     ])
-                    ->required()
-                    ->default('draft'),
+                    ->required(),
             ]);
     }
 

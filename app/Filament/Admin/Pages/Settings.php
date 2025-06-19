@@ -8,6 +8,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Pages\Page;
 use Jackiedo\DotenvEditor\Facades\DotenvEditor;
+use Webbingbrasil\FilamentCopyActions\Forms\Actions\CopyAction;
 
 class Settings extends Page
 {
@@ -29,15 +30,23 @@ class Settings extends Page
         $this->form->fill([
             'email' => [
 
-                    'driver' => config('mail.default'),
-                    'host' => config('mail.mailers.smtp.host'),
-                    'port' => config('mail.mailers.smtp.port'),
-                    'scheme' => config('mail.mailers.smtp.scheme'),
-                    'username' => config('mail.mailers.smtp.username'),
-                    'password' => config('mail.mailers.smtp.password'),
-                    'email' => config('mail.from.address'),
-                    'name' => config('mail.from.name'),
-                ] + $this->getSettings($settings)
+                'driver' => config('mail.default'),
+                'host' => config('mail.mailers.smtp.host'),
+                'port' => config('mail.mailers.smtp.port'),
+                'scheme' => config('mail.mailers.smtp.scheme'),
+                'username' => config('mail.mailers.smtp.username'),
+                'password' => config('mail.mailers.smtp.password'),
+                'email' => config('mail.from.address'),
+                'name' => config('mail.from.name'),
+            ],
+            'payments' => [
+                    'publishable' => config('payments.drivers.stripe.public_key'),
+                    'secret' => config('payments.drivers.stripe.secret_key'),
+                    'webhook_secret' => config('payments.drivers.stripe.webhook_secret'),
+                    'webhook' => route('cashier.webhook')
+
+                ]
+                + $this->getSettings($settings)
         ]);
     }
 
@@ -51,14 +60,18 @@ class Settings extends Page
                             ->schema([
                                 Forms\Components\TextInput::make('site_name')
                                     ->label('Site Name')
-//                                    ->required()
-                                ,
+                                    ->required() ,
                                 Forms\Components\TextInput::make('site_description')
                                     ->label('Site Description'),
                                 Forms\Components\FileUpload::make('site_logo')
                                     ->label('Site Logo')
                                     ->image()
-                                    ->directory('logos'),
+                                    ->directory('site'),
+                                Forms\Components\FileUpload::make('site_favicon')
+                                    ->label('Site Favicon')
+                                    ->image()
+                                    ->directory('site'),
+//                                add support email
                             ]),
 
                         Forms\Components\Tabs\Tab::make('Landing Page')
@@ -92,43 +105,15 @@ class Settings extends Page
                                     ->reorderable(),
                             ]),
 
-                        Forms\Components\Tabs\Tab::make('Pricing')
-                            ->schema([
-                                Forms\Components\TextInput::make('pricing_title')
-                                    ->label('Pricing Title')
-//                                    ->required()
-                                ,
-                                Forms\Components\TextInput::make('pricing_subtitle')
-                                    ->label('Pricing Subtitle')
-//                                    ->required()
-                                ,
-                                Forms\Components\Repeater::make('plans')
-                                    ->schema([
-                                        Forms\Components\TextInput::make('name')
-//                                            ->required()
-                                        ,
-                                        Forms\Components\TextInput::make('price')
-                                            ->numeric()
-//                                            ->required()
-                                        ,
-                                        Forms\Components\TextInput::make('description')
-//                                            ->required()
-                                        ,
-                                        Forms\Components\TagsInput::make('features')
-//                                            ->required()
-                                        ,
-                                    ])
-                                    ->columns(2)
-                                    ->defaultItems(3)
-                                    ->reorderable(),
-                            ]),
-
                         Forms\Components\Tabs\Tab::make('FAQ')
                             ->schema([
                                 Forms\Components\TextInput::make('faq_title')
                                     ->label('FAQ Title')
-//                                    ->required()
-                                ,
+                                    ->required(),
+                                Forms\Components\TextInput::make('faq_description')
+                                    ->label('FAQ Description')
+                                    ->required(),
+
                                 Forms\Components\Repeater::make('faq_items')
                                     ->schema([
                                         Forms\Components\TextInput::make('question')
@@ -146,35 +131,23 @@ class Settings extends Page
 
                         Forms\Components\Tabs\Tab::make('Payments')
                             ->schema([
-//                                Forms\Components\Select::make('default_payment_provider')
-//                                    ->label('Default Payment Provider')
-//                                    ->options(fn () => \App\Models\PaymentProvider::pluck('name', 'code'))
-//                                    ->required(),
+                                Forms\Components\TextInput::make('payments.publishable')
+                                    ->label('Stripe Publishable Key')
+                                    ->required(),
 
-                                Forms\Components\TextInput::make('currency')
-                                    ->label('Default Currency')
-                                    ->default('USD')
-//                                    ->required()
-                                ,
+                                Forms\Components\TextInput::make('payments.secret')
+                                    ->label('Stripe Secret Key')
+                                    ->required(),
 
-                                Forms\Components\Toggle::make('enable_trial')
-                                    ->label('Enable Trial Period')
-                                    ->default(true),
+                                Forms\Components\TextInput::make('payments.webhook_secret')
+                                    ->label(' Stripe Webhook Secret ')
+                                    ->required(),
 
-                                Forms\Components\TextInput::make('trial_days')
-                                    ->label('Trial Period (Days)')
-                                    ->numeric()
-                                    ->default(14)
-                                    ->required()
-                                    ->visible(fn(Forms\Get $get) => $get('enable_trial')),
 
-                                Forms\Components\Toggle::make('enable_coupons')
-                                    ->label('Enable Coupons')
-                                    ->default(true),
-
-                                Forms\Components\Toggle::make('enable_refunds')
-                                    ->label('Enable Refunds')
-                                    ->default(true),
+                                Forms\Components\TextInput::make('payments.webhook')
+                                    ->label('Webhook URL')
+                                    ->disabled()
+                                    ->suffixAction(CopyAction::make()),
                             ]),
 
                         Forms\Components\Tabs\Tab::make('Email Configuration')
@@ -243,58 +216,58 @@ class Settings extends Page
     public function save(SettingsManager $settings): void
     {
         $data = $this->form->getState();
+        $env = DotenvEditor::load();
 
-        if ($data['email']) {
+        if (!empty($data['email'])) {
             $d = $data['email'];
 
-            $env = DotenvEditor::load();
-            if ($env->getValue('MAIL_MAILER') !== $d['driver']) {
+            $envKeys = [
+                'MAIL_MAILER' => $d['driver'],
+                'MAIL_SCHEME' => $d['scheme'],
+                'MAIL_HOST' => $d['host'],
+                'MAIL_PORT' => $d['port'],
+                'MAIL_USERNAME' => $d['username'],
+                'MAIL_PASSWORD' => $d['password'],
+                'MAIL_FROM_ADDRESS' => $d['email'],
+                'MAIL_FROM_NAME' => $d['name'],
+            ];
 
-                $env->setKey('MAIL_MAILER', $d['driver']);
-                $env->save();
+            $changed = false;
+
+            foreach ($envKeys as $key => $newValue) {
+                if ($env->getValue($key) !== $newValue) {
+                    $env->setKey($key, $newValue);
+                    $changed = true;
+                }
             }
 
-            if ($env->getValue('MAIL_SCHEME') !==$d['scheme']) {
-
-                $env->setKey('MAIL_SCHEME',$d['scheme']);
+            if ($changed) {
                 $env->save();
             }
+        }
+        if (!empty($data['payments'])) {
+            $d = $data['payments'];
 
-            if ($env->getValue('MAIL_HOST') !==$d['host'] ) {
+            $envKeys = [
+                'STRIPE_KEY' => $d['publishable'],
+                'STRIPE_SECRET' => $d['secret'],
+                'STRIPE_WEBHOOK_SECRET' => $d['webhook_secret'],
 
-                $env->setKey('MAIL_HOST',$d['host']);
-                $env->save();
+            ];
+
+
+            $changed = false;
+
+            foreach ($envKeys as $key => $newValue) {
+                if ($env->getValue($key) !== $newValue) {
+                    $env->setKey($key, $newValue);
+                    $changed = true;
+                }
             }
 
-            if ($env->getValue('MAIL_PORT') !== $d['port']) {
-
-                $env->setKey('MAIL_PORT',$d['port']);
+            if ($changed) {
                 $env->save();
             }
-
-            if ($env->getValue('MAIL_USERNAME') !== $d['username']) {
-
-                $env->setKey('MAIL_USERNAME', $d['username']);
-                $env->save();
-            }
-
-            if ($env->getValue('MAIL_PASSWORD') !==$d['password']) {
-
-                $env->setKey('MAIL_PASSWORD',$d['password'] );
-                $env->save();
-            }
-
-            if ($env->getValue('MAIL_FROM_ADDRESS') !== $d['email']) {
-
-                $env->setKey('MAIL_FROM_ADDRESS', $d['email']);
-                $env->save();
-            }
-            if ($env->getValue('MAIL_FROM_NAME') !== $d['name']) {
-
-                $env->setKey('MAIL_FROM_NAME', $d['name']);
-                $env->save();
-            }
-
         }
         foreach ($data as $key => $value) {
             $type = match (true) {
