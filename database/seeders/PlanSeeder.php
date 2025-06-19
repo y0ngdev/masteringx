@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Plan;
 use Illuminate\Database\Seeder;
 
 class PlanSeeder extends Seeder
@@ -11,7 +12,7 @@ class PlanSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Plan::query()->create([
+        Plan::query()->create([
             'name' => 'Complete Course',
             'sort_order' => '1',
             'short_description' => 'Perfect for independent creators and instructors',

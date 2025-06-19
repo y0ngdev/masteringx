@@ -23,7 +23,6 @@ return new class extends Migration
             $table->text('meta_description')->nullable();
             $table->text('meta_keywords')->nullable();
             $table->enum('status', ['PUBLISHED', 'DRAFT', 'PENDING'])->default('DRAFT');
-            $table->boolean('featured')->default(false);
             $table->timestamps();
 
             // Foreign key constraints
