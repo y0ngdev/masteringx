@@ -4,11 +4,14 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\LessonResource\Pages;
 use App\Models\Lesson;
+//use App\Services\VimeoService;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 
 class LessonResource extends Resource
 {
@@ -24,54 +27,74 @@ class LessonResource extends Resource
     {
         return $form
             ->schema([
+
+
+                Forms\Components\TextInput::make('title')
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(fn(Set $set, ?string $state): mixed => $set('slug', Str::slug($state)))
+
+                    //                    ->required()
+                    ->maxLength(255),
+
+                Forms\Components\TextInput::make('slug')
+                    ->required()
+                    ->unique(ignoreRecord: true)
+                    ->maxLength(191),
+
                 Forms\Components\Select::make('module_id')
                     ->relationship('module', 'title')
                     ->required()
                     ->searchable()
                     ->preload(),
-                Forms\Components\TextInput::make('title')
-                    ->required()
-                    ->maxLength(255),
+
+                Forms\Components\TextInput::make('position')
+                    ->numeric()
+                    ->unique()
+                    ->default(0),
+
                 Forms\Components\RichEditor::make('description')
+                    ->label('Video Summary')
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('video_url')
-                    ->required()
-                    ->url()
-                    ->maxLength(255),
+
+                Forms\Components\FileUpload::make('video')
+                    ->label('Video File')
+                    ->disk(config('filesystems.default'))
+                    ->directory('lessons-temp')
+                    ->moveFiles()
+                    ->visibility('private')
+                    ->hiddenOn('edit')
+                    ->required(fn(string $context): bool => $context === 'create')
+                ,
+
+                Forms\Components\Hidden::make('status')->default('processing'),
+
                 Forms\Components\TextInput::make('duration')
                     ->numeric()
+                    ->label('Duration (optional)')
                     ->default(0)
-                    ->suffix('seconds'),
-                Forms\Components\TextInput::make('order')
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\Toggle::make('is_pre-viewable')
-                    ->label('Free Preview')
-                    ->default(false),
-                Forms\Components\Toggle::make('is_published')
-                    ->label('Free Preview')
-                    ->default(false),
-                Forms\Components\Select::make('status')
-                    ->options([
+                    ->suffix('seconds')
+                    ->disabled()
+                    ->dehydrated(),
 
-                        'processing' => 'Processing',
-                        'successful' => 'Successful',
-                        'failed' => 'Failed'
-                    ])
-                    ->required(),
+
+                Forms\Components\Toggle::make('can_preview')
+                    ->label('Free Preview')
+                    ->required()
+                    ->default(false),
+
+                Forms\Components\Toggle::make('is_published')
+                    ->label('Published?')
+                    ->required()
+                    ->default(false),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-            ->reorderable('order')
-            ->defaultSort('order')
+            ->reorderable('position')
+            ->defaultSort('position')
             ->columns([
-                Tables\Columns\TextColumn::make('module.course.title')
-                    ->label('Course')
-                    ->searchable()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('module.title')
                     ->label('Module')
                     ->searchable()
@@ -79,29 +102,41 @@ class LessonResource extends Resource
                 Tables\Columns\TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('duration')
-                    ->formatStateUsing(fn(int $state): string => gmdate('H:i:s', $state))
+                Tables\Columns\TextColumn::make('formatted_duration')
+                    ->label('Duration')
                     ->sortable(),
-                Tables\Columns\IconColumn::make('is_free')
+                Tables\Columns\IconColumn::make('is_pre-viewable')
                     ->boolean()
                     ->label('Free Preview'),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
-                        'published' => 'success',
-                        'draft' => 'warning',
+                        'ready' => 'success',
+                        'processing' => 'warning',
+                        'failed' => 'danger',
                     }),
+                Tables\Columns\IconColumn::make('is_published')
+                    ->boolean()
+                    ->label('Published'),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->options([
-                        'draft' => 'Draft',
-                        'published' => 'Published',
+                        'processing' => 'Processing',
+                        'ready' => 'Ready',
+                        'failed' => 'Failed',
                     ]),
-                Tables\Filters\SelectFilter::make('is_free')
+                Tables\Filters\SelectFilter::make('is_pre-viewable')
+                    ->label('Preview Type')
                     ->options([
                         '1' => 'Free Preview',
                         '0' => 'Premium',
+                    ]),
+                Tables\Filters\SelectFilter::make('is_published')
+                    ->label('Publication Status')
+                    ->options([
+                        '1' => 'Published',
+                        '0' => 'Draft',
                     ]),
             ])
             ->actions([
@@ -131,3 +166,4 @@ class LessonResource extends Resource
         ];
     }
 }
+

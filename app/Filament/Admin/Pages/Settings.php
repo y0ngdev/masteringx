@@ -71,7 +71,7 @@ class Settings extends Page
                                     ->label('Site Favicon')
                                     ->image()
                                     ->directory('site'),
-//                                add support email
+//                                add support email. vimeo api key
                             ]),
 
                         Forms\Components\Tabs\Tab::make('Landing Page')

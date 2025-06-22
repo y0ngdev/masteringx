@@ -13,7 +13,10 @@
         "laravel/cashier": "^15.7",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
+        "league/flysystem-aws-s3-v3": "3.0",
+        "pbmedia/laravel-ffmpeg": "^8.7",
         "tightenco/ziggy": "^2.4",
+        "vimeo/laravel": "^5.10",
         "webbingbrasil/filament-copyactions": "^3.0"
     },
     "require-dev": {
@@ -33,7 +36,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "bootstrap/php_settings.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
