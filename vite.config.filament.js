@@ -11,13 +11,7 @@ export default defineConfig({
         }),
     ],
     css: {
-        postcss: {
-            from:'./postcss.config..filament.js',
-            plugins: [
-                tailwindcss(),
-                autoprefixer(),
-            ],
-        },
+        postcss: null,
     },
     build: {
         outDir: 'public/build/filament',
