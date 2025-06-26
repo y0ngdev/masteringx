@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import Footer from '@/components/landing/Footer.vue';
 import Navbar from '@/components/landing/Navbar.vue';
+import { VueMarkdownIt } from '@f3ve/vue-markdown-it';
 import { usePage } from '@inertiajs/vue3';
 import { Calendar, User } from 'lucide-vue-next';
 import { computed } from 'vue';
-
+import { tasklist } from "@mdit/plugin-tasklist";
+import { mark } from "@mdit/plugin-mark";
 type Article = {
     id: string;
     title: string;
@@ -26,6 +28,13 @@ const formattedDate = computed(() =>
         year: 'numeric',
     }),
 );
+
+const opt=[
+    tasklist,
+    mark
+]
+const content ="```php +
+    ```";
 </script>
 
 <template>
@@ -57,6 +66,12 @@ const formattedDate = computed(() =>
                     {{ block.content }}
                 </component>
             </div>
+
+            <VueMarkdownIt
+                :source="content"
+                class="prose dark:prose-invert max-w-none"
+            :plugins="opt"
+            />
         </article>
 
         <Footer />

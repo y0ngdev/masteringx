@@ -1,7 +1,8 @@
 @import url('https://rsms.me/inter/inter.css');
 @import 'tailwindcss-v4';
-
 @import 'tw-animate-css';
+
+@plugin "@tailwindcss/typography";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
