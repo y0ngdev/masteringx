@@ -4,7 +4,7 @@
     "scripts": {
         "build": "vite build && vite build --config vite.config.filament.js",
         "build:ssr": "vite build && vite build --ssr",
-        "dev": "concurrently \"vite\" \"vite --config vite.config.filament.js\"",
+        "dev": "vite",
         "format": "prettier --write resources/",
         "format:check": "prettier --check resources/",
         "lint": "eslint . --fix"
