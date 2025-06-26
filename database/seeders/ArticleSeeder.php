@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\Post;
+use App\Models\Article;
 use Illuminate\Database\Seeder;
 
-class PostSeeder extends Seeder
+class ArticleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        \App\Models\Post::query()->insert([
+        Article::query()->insert([
             0 => [
                 'id' => 5,
                 'author_id' => 1,

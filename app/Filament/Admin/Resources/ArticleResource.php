@@ -2,8 +2,8 @@
 
 namespace App\Filament\Admin\Resources;
 
-use App\Filament\Admin\Resources\PostResource\Pages;
-use App\Models\Post;
+use App\Filament\Admin\Resources\ArticleResource\Pages;
+use App\Models\Article;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -13,9 +13,9 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 
-class PostResource extends Resource
+class ArticleResource extends Resource
 {
-    protected static ?string $model = Post::class;
+    protected static ?string $model = Article::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-newspaper';
 
@@ -29,7 +29,7 @@ class PostResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('title')
                     ->live(onBlur: true)
-                    ->afterStateUpdated(fn (Set $set, ?string $state): mixed => $set('slug', Str::slug($state)))
+                    ->afterStateUpdated(fn(Set $set, ?string $state): mixed => $set('slug', Str::slug($state)))
                     ->required()
                     ->maxLength(191),
                 Forms\Components\TextInput::make('slug')
@@ -39,7 +39,7 @@ class PostResource extends Resource
                 Forms\Components\RichEditor::make('body')
                     ->required()
                     ->columnSpanFull()
-                    ->afterStateUpdated(fn (Set $set, ?string $state): mixed => $set('excerpt', Str::excerpt($state))),
+                    ->afterStateUpdated(fn(Set $set, ?string $state): mixed => $set('excerpt', Str::excerpt($state))),
                 Forms\Components\Textarea::make('excerpt')
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('seo_title')
@@ -48,7 +48,7 @@ class PostResource extends Resource
                     ->label('Author')
                     ->options(
                         User::all()
-                            ->mapWithKeys(fn ($user) => [
+                            ->mapWithKeys(fn($user) => [
                                 $user->id => $user->name
                                     ?? $user->username
                                         ?? $user->email,
@@ -120,9 +120,9 @@ class PostResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPosts::route('/'),
-            'create' => Pages\CreatePost::route('/create'),
-            'edit' => Pages\EditPost::route('/{record}/edit'),
+            'index' => Pages\ListArticle::route('/'),
+            'create' => Pages\CreateArticle::route('/create'),
+            'edit' => Pages\EditArticle::route('/{record}/edit'),
         ];
     }
 }

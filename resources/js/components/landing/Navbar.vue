@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Menu, X, ShoppingCart } from 'lucide-vue-next';
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import { useWindowScroll } from '@vueuse/core';
+import { Link } from '@inertiajs/vue3';
 
 const isOpen = ref(false);
 const isScrolled = ref(false);
@@ -42,7 +43,7 @@ const navigation = [
     { name: 'About', href: '#about' },
     { name: 'Pricing', href: '#pricing' },
     { name: 'Articles', href: route('articles') },
-    { name: 'Watch', href: route('watch') },
+    // { name: 'Watch', href: route('watch') },
 ];
 </script>
 
@@ -58,27 +59,27 @@ const navigation = [
                         <!-- Logo -->
                         <a href="/" class="flex items-center gap-2 transition hover:opacity-80">
                             <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                                <span class="font-medium text-primary-foreground">A</span>
+                                <span class="font-medium text-primary-foreground">M</span>
                             </div>
-                            <span class="font-bold text-foreground">Anystack</span>
+                            <span class="font-bold text-foreground">Mastering X</span>
                         </a>
                     </div>
 
                     <!-- Desktop Navigation -->
-                    <div class="hidden items-center space-x-6 md:flex">
-                        <a
+                    <div class="hidden items-center space-x-6 md:flex text-sm">
+                        <Link
                             v-for="item in navigation"
                             :key="item.name"
                             :href="item.href"
-                            class="relative font-bold text-muted-foreground transition-colors hover:text-foreground after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full"
+                            class="relative font-medium text-muted-foreground transition-colors hover:text-foreground after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full"
                         >
                             {{ item.name }}
-                        </a>
+                        </Link>
                     </div>
                 </div>
 
                 <!-- Desktop Navigation -->
-                <div class="hidden items-center space-x-6 md:flex">
+                <div class="hidden items-center space-x-6 md:flex text-sm">
                     <a
                         href="/signin"
                         class="font-medium text-muted-foreground transition-colors hover:text-foreground"
