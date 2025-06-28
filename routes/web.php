@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Resources\ModuleResource;
 use App\Models\Article;
 use App\Models\Lesson;
 use App\Models\Module;
@@ -76,9 +77,14 @@ Route::get('watch', function () {
 Route::get('watch/{slug}', function () {
 
 
+    $modules = Module::published()->with('lessons')
+        ->orderBy('order')
+        ->get();
+
+
     return Inertia::render('Watch/Show', [
         'lesson' => Lesson::where('slug', request()->route('slug'))->firstOrFail(),
-        'modules' => Module::published()->orderBy('order')->get()->all(),
+        'modules' => new ModuleResource($modules),
 
     ]);
 })->name('watch.lesson');

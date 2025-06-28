@@ -78,7 +78,7 @@ onMounted(() => {
 
     <SidebarProvider>
         <CourseNav />
-        <Sidebar class="mt-16" v-if="currentCourse" :course="currentCourse" :current-lesson="currentLesson" @select-lesson="handleLessonSelect" />
+        <Sidebar class="mt-16" v-if="currentCourse" :course="currentCourse" :modules="modules" :current-lesson="currentLesson" @select-lesson="handleLessonSelect" />
         <SidebarInset class="mt-16">
             <!-- Video player area -->
             <div class="flex flex-1 flex-col">

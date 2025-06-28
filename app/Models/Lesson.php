@@ -103,5 +103,20 @@ class Lesson extends Model
         }
     }
 
+    public function isLocked(?User $user): bool
+    {
+        // Guest users or unsubscribed users: Only can_preview = true is free
+        if (!$user || !$user->subscribed()) {
+            return !$this->can_preview;
+        }
+
+        // Subscribed users can view all
+        return false;
+    }
+    public function canWatch(?User $user): string
+    {
+        return !$this->isLocked( $user);
+    }
+
 
 }
