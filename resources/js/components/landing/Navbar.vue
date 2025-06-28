@@ -49,7 +49,7 @@ const navigation = [
 
 <template>
     <header
-        class="fixed z-50 flex h-16 w-full items-center bg-background/80 backdrop-blur-sm transition-all duration-300"
+        class="fixed z-50 flex h-16 w-full items-center bg-background/80 backdrop-blur-sm transition-all duration-300 "
         :class="{ 'border-b': isScrolled }"
     >
         <div class="container mx-auto px-4 md:px-6 lg:px-14">
@@ -81,12 +81,12 @@ const navigation = [
                 <!-- Desktop Navigation -->
                 <div class="hidden items-center space-x-6 md:flex text-sm">
                     <a
-                        href="/signin"
+                        :href="route('login')"
                         class="font-medium text-muted-foreground transition-colors hover:text-foreground"
                     >
                         Sign in
                     </a>
-                    <Button class="transition duration-300 hover:scale-105">
+                    <Button class="transition duration-300 hover:scale-105" as="a" :href="route('buy')">
                         <ShoppingCart class="mr-2 h-4 w-4" />
                         Buy Now
                     </Button>
@@ -137,12 +137,14 @@ const navigation = [
                                     Sign in
                                 </a>
                                 <Button
-                                    class="w-full transform transition-all duration-200 hover:scale-[1.02]"
+                                    class="w-full transform transition-all duration-200 hover:scale-[1.02]" as="a" :href="route('buy')"
                                     @click="isOpen = false"
                                 >
                                     <ShoppingCart class="mr-2 h-4 w-4" />
                                     Buy Now
                                 </Button>
+
+
                             </div>
                         </div>
                     </div>

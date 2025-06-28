@@ -6,7 +6,9 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
-})->name('home');
+})->name('home');Route::get('/', function () {
+    return Inertia::render('Welcome');
+})->name('buy');
 
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
@@ -15,7 +17,7 @@ Route::get('dashboard', function () {
 Route::get('articles/', function () {
     return Inertia::render('Article/Index', [
         'articles' =>
-            Article::with('user')->latest()
+            Article::published()->with('user')->latest()
 //            ->paginate(10)
                 ->get()->map(function ($article) {
                     return [
@@ -40,9 +42,22 @@ Route::get('articles/', function () {
 
 Route::get('article/{slug}', function () {
     return Inertia::render('Article/Show', [
-        'article' => Article::with('user')->where('slug', request()->route('slug'))->firstOrFail()->toResource(),
+        'article' => Article::published()->with('user')->where('slug', request()->route('slug'))->firstOrFail()->toResource(),
     ]);
 })->name('articles.show');
+
+Route::get('watch/{slug}', function () {
+    return Inertia::render('Watch/Show', [
+        'article' => Article::published()->with('user')->where('slug', request()->route('slug'))->firstOrFail()->toResource(),
+    ]);
+})->name('watch');
+
+Route::get('watch', function () {
+    return Inertia::render('Watch/Show', [
+
+       ]);
+})->name('watch');
+
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -16,7 +18,7 @@ class Article extends Model
         'id',
     ];
 
-    public function link()
+    public function link(): string
     {
 
         return route('articles.show', $this->slug);
@@ -29,14 +31,14 @@ class Article extends Model
 
 
 
-//    /**
-//     * Scope the query to only include drafts.
-//     */
-//    #[Scope]
-//    protected function draft(Builder $query): void
-//    {
-//        $query->withAttributes([
-//            'hidden' => true,
-//        ]);
-//    }
+    /**
+     * Scope the query to only include published articles.
+     */
+    #[Scope]
+    protected function published(Builder $query): void
+    {
+        $query->withAttributes([
+            'status' => 'PUBLISHED',
+        ]);
+    }
 }

@@ -12,6 +12,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
+use Spatie\FilamentMarkdownEditor\MarkdownEditor;
 
 class ArticleResource extends Resource
 {
@@ -36,7 +37,10 @@ class ArticleResource extends Resource
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->maxLength(191),
-                Forms\Components\RichEditor::make('body')
+
+                MarkdownEditor::make('body')
+                    ->fileAttachmentsDisk('articles')
+                    ->fileAttachmentsVisibility('public')
                     ->required()
                     ->columnSpanFull()
                     ->afterStateUpdated(fn(Set $set, ?string $state): mixed => $set('excerpt', Str::excerpt($state))),

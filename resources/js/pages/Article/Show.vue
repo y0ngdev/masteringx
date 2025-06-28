@@ -7,6 +7,7 @@ import { Calendar, User } from 'lucide-vue-next';
 import { computed } from 'vue';
 import { tasklist } from "@mdit/plugin-tasklist";
 import { mark } from "@mdit/plugin-mark";
+import shiki from '@shikijs/markdown-it'
 type Article = {
     id: string;
     title: string;
@@ -31,10 +32,26 @@ const formattedDate = computed(() =>
 
 const opt=[
     tasklist,
-    mark
+    mark,
+    shiki({
+        theme: 'min-dark',
+        inlineCode: true,
+        codeBlock: true,
+    }),
 ]
-const content ="```php +
-    ```";
+
+
+// useSeoMeta({
+//     ogType: 'article',
+//     author: 'Harlan Wilton',
+//     articleAuthor: ['Harlan Wilton'],
+//     articlePublishedTime: '2024-01-01',
+//     articleModifiedTime: '2024-01-01',
+//     twitterData1: 'Harlan Wilton',
+//     twitterLabel1: 'Author',
+//     twitterData2: '10 min',
+//     twitterLabel2: 'Read Time',
+// })
 </script>
 
 <template>
@@ -61,14 +78,9 @@ const content ="```php +
             </header>
 
             <!-- Markdown Content -->
-            <div class="prose dark:prose-invert max-w-none">
-                <component v-for="(block, index) in formattedContent" :key="index" :is="block.type" v-bind="block.props">
-                    {{ block.content }}
-                </component>
-            </div>
 
             <VueMarkdownIt
-                :source="content"
+                :source="article.body"
                 class="prose dark:prose-invert max-w-none"
             :plugins="opt"
             />
