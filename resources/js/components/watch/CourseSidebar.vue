@@ -13,7 +13,7 @@ import {
     SidebarRail,
 } from '@/components/ui/sidebar';
 import { Course, Lesson } from '@/types/course';
-import { Lock, Minus, Plus } from 'lucide-vue-next';
+import { Lock, Minus, Plus,ChevronDown,ChevronUp } from 'lucide-vue-next';
 import { ref } from 'vue';
 
 interface Props {
@@ -49,8 +49,8 @@ const togglemodule = (moduleId: string) => {
                             <CollapsibleTrigger as-child>
                                 <SidebarMenuButton size="sm" :tooltip="item.title" class="truncate text-zinc-300">
                                     {{ item.title }}
-                                    <Plus class="ml-auto group-data-[state=open]/collapsible:hidden" />
-                                    <Minus class="ml-auto group-data-[state=closed]/collapsible:hidden" />
+                                    <ChevronDown class="ml-auto group-data-[state=open]/collapsible:hidden" />
+                                    <ChevronUp class="ml-auto group-data-[state=closed]/collapsible:hidden" />
                                 </SidebarMenuButton>
                             </CollapsibleTrigger>
 
@@ -75,6 +75,8 @@ const togglemodule = (moduleId: string) => {
                                                 <div class="text-muted-foreground ml-2 flex flex-shrink-0 items-center gap-1 text-xs">
                                                     <!--                                                    <CheckCircle class="h-2 w-2 text-green-600" />-->
                                                     <Lock class="h-2 w-2" />
+<!--                                              TODO:      CircleSmall-->
+<!--                                                    Dot-->
                                                     <!--                                                    v-if="lesson.completed"-->
                                                 </div>
                                             </a>

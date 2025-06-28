@@ -80,6 +80,7 @@ const navigation = [
                             Buy Now
                         </Button>
                     </div>
+<!--                    Todo: only show on mobile-->
                     <SidebarTrigger class="ml-2" />
                 </div>
             </nav>

@@ -1,12 +1,15 @@
 <?php
 
 use App\Models\Article;
+use App\Models\Lesson;
+use App\Models\Module;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
-})->name('home');Route::get('/', function () {
+})->name('home');
+Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('buy');
 
@@ -46,17 +49,39 @@ Route::get('article/{slug}', function () {
     ]);
 })->name('articles.show');
 
-Route::get('watch/{slug}', function () {
-    return Inertia::render('Watch/Show', [
-        'article' => Article::published()->with('user')->where('slug', request()->route('slug'))->firstOrFail()->toResource(),
-    ]);
-})->name('watch');
-
 Route::get('watch', function () {
-    return Inertia::render('Watch/Show', [
 
-       ]);
+    $module = Module::published()
+        ->orderBy('order')
+        ->firstOrFail();
+    $query = $module?->lessons->
+    where('is_published', true)
+        ->where('status', 'ready');
+
+    $user = Auth::user();
+
+    if (!$user || !$user->subscribed()) {
+        $query->where('can_preview', true);
+    }
+
+    $lesson = $query->first();
+    if (!$lesson) {
+        return redirect()->route('home');
+    }
+
+    return redirect()->route('watch.lesson', $lesson->slug);
 })->name('watch');
+
+
+Route::get('watch/{slug}', function () {
+
+
+    return Inertia::render('Watch/Show', [
+        'lesson' => Lesson::where('slug', request()->route('slug'))->firstOrFail(),
+        'modules' => Module::published()->orderBy('order')->get()->all(),
+
+    ]);
+})->name('watch.lesson');
 
 
 require __DIR__ . '/settings.php';

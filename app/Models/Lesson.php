@@ -3,6 +3,8 @@
 namespace App\Models;
 
 //use App\Services\VimeoService;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +17,15 @@ class Lesson extends Model
     protected $guarded = [
         'id',
 
+    ];
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var list<string>
+     */
+    protected $hidden = [
+        'created_at',
+        'updated_at',
     ];
 
     protected $casts = [
@@ -91,4 +102,6 @@ class Lesson extends Model
             $this->update(['status' => 'ready']);
         }
     }
+
+
 }

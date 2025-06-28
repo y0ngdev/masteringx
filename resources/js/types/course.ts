@@ -1,18 +1,17 @@
 export type Lesson = {
     id: string
     title: string
+    description: string
     duration: string
-    completed: boolean
-    type: 'video' | 'quiz' | 'reading'
-    videoUrl?: string
+    canWatch:boolean
+    url: string
 }
 
 export type Module = {
     id: string
     title: string
     lessons: Lesson[]
-    totalDuration: string
-    completedLessons: number
+
 }
 
 export type Course = {
@@ -28,10 +27,3 @@ export type Course = {
     currentLesson?: Lesson
 }
 
-export type CourseProgress = {
-    courseId: string
-    completedLessons: string[]
-    currentLessonId: string
-    lastWatched: Date
-    totalProgress: number
-}

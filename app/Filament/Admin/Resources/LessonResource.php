@@ -4,7 +4,6 @@ namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Resources\LessonResource\Pages;
 use App\Models\Lesson;
-//use App\Services\VimeoService;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
@@ -12,6 +11,8 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
+
+//use App\Services\VimeoService;
 
 class LessonResource extends Resource
 {
@@ -51,9 +52,10 @@ class LessonResource extends Resource
                     ->numeric()
                     ->unique()
                     ->default(0),
-
+// Todo: add markdown editor
                 Forms\Components\RichEditor::make('description')
                     ->label('Video Summary')
+                    ->placeholder('here you can add all that entails to the video. Summaries, transcription, anything that the video neds')
                     ->columnSpanFull(),
 
                 Forms\Components\FileUpload::make('video')
