@@ -41,7 +41,7 @@ onBeforeUnmount(() => {
 const navigation = [
     { name: 'About', href: '#about' },
     { name: 'Pricing', href: '#pricing' },
-    { name: 'Articles', href: route('articles') },
+    { name: 'Articles', href: route('articles') }
     // { name: 'Watch', href: route('watch') },
 ];
 </script>
@@ -73,8 +73,12 @@ const navigation = [
 
                 <div class="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
                     <div class="items-center space-x-6 text-sm">
-                        <a :href="route('login')" class="text-muted-foreground hover:text-foreground font-medium transition-colors"> Sign in </a>
-                        <Button class="transition duration-300 hover:scale-105" size="sm" as="a" :href="route('buy')"> Buy Now </Button>
+                        <a :href="route('login')"
+                           class="text-muted-foreground hover:text-foreground font-medium transition-colors"> Sign
+                            in </a>
+                        <Button class="transition duration-300 hover:scale-105" size="sm" as="a" :href="route('buy')">
+                            Buy Now
+                        </Button>
                     </div>
                     <SidebarTrigger class="ml-2" />
                 </div>

@@ -58,10 +58,15 @@ const navigation = [
                     <div class="mr-8 flex items-center">
                         <!-- Logo -->
                         <a href="/" class="flex items-center gap-2 transition hover:opacity-80">
-                            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                                <span class="font-medium text-primary-foreground">M</span>
+                            <div class="bg-primary flex h-8 w-8 items-center justify-center rounded-lg">
+                                <span class="text-primary-foreground font-medium">M</span>
                             </div>
-                            <span class="font-bold text-foreground">Mastering X</span>
+
+                            <div
+                                class="hidden whitespace-nowrap text-base font-semibold tracking-tight text-zinc-800 sm:block md:text-[17px] dark:text-zinc-100"
+                            >
+                                Mastering X
+                            </div>
                         </a>
                     </div>
 

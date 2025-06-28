@@ -20,9 +20,9 @@ export const useCourse = () => {
         totalDuration: '12h 45m',
         totalLessons: 48,
         completedLessons: 12,
-        sections: [
+        modules: [
             {
-                id: 'section-1',
+                id: 'module-1',
                 title: 'Getting Started with Vue.js 3',
                 totalDuration: '2h 15m',
                 completedLessons: 4,
@@ -65,12 +65,13 @@ export const useCourse = () => {
                         duration: '28:45',
                         completed: false,
                         type: 'video',
+                        isActive:true,
                         videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4'
                     }
                 ]
             },
             {
-                id: 'section-2',
+                id: 'module-2',
                 title: 'Composition API Deep Dive',
                 totalDuration: '3h 30m',
                 completedLessons: 2,
@@ -102,7 +103,7 @@ export const useCourse = () => {
                 ]
             },
             {
-                id: 'section-3',
+                id: 'module-3',
                 title: 'Component Architecture',
                 totalDuration: '4h 20m',
                 completedLessons: 0,
@@ -135,8 +136,9 @@ export const useCourse = () => {
 
     const initializeCourse = () => {
         currentCourse.value = mockCourse
-        currentLesson.value = mockCourse.sections[0].lessons[4] // Start with first incomplete lesson
+        currentLesson.value = mockCourse.modules[0].lessons[1] // Start with first incomplete lesson
     }
+
 
     const selectLesson = (lesson: Lesson) => {
         currentLesson.value = lesson
@@ -147,11 +149,11 @@ export const useCourse = () => {
     const markLessonComplete = (lessonId: string) => {
         if (!currentCourse.value) return
 
-        currentCourse.value.sections.forEach(section => {
-            const lesson = section.lessons.find(l => l.id === lessonId)
+        currentCourse.value.modules.forEach(module => {
+            const lesson = module.lessons.find(l => l.id === lessonId)
             if (lesson && !lesson.completed) {
                 lesson.completed = true
-                section.completedLessons++
+                module.completedLessons++
                 currentCourse.value!.completedLessons++
             }
         })
@@ -160,18 +162,18 @@ export const useCourse = () => {
     const getNextLesson = (): Lesson | null => {
         if (!currentCourse.value || !currentLesson.value) return null
 
-        for (const section of currentCourse.value.sections) {
-            const currentIndex = section.lessons.findIndex(l => l.id === currentLesson.value!.id)
+        for (const module of currentCourse.value.modules) {
+            const currentIndex = module.lessons.findIndex(l => l.id === currentLesson.value!.id)
             if (currentIndex !== -1) {
-                // Check if there's a next lesson in current section
-                if (currentIndex < section.lessons.length - 1) {
-                    return section.lessons[currentIndex + 1]
+                // Check if there's a next lesson in current module
+                if (currentIndex < module.lessons.length - 1) {
+                    return module.lessons[currentIndex + 1]
                 }
-                // Check next section
-                const sectionIndex = currentCourse.value.sections.findIndex(s => s.id === section.id)
-                if (sectionIndex < currentCourse.value.sections.length - 1) {
-                    const nextSection = currentCourse.value.sections[sectionIndex + 1]
-                    return nextSection.lessons[0]
+                // Check next module
+                const moduleIndex = currentCourse.value.modules.findIndex(s => s.id === module.id)
+                if (moduleIndex < currentCourse.value.modules.length - 1) {
+                    const nextmodule = currentCourse.value.modules[moduleIndex + 1]
+                    return nextmodule.lessons[0]
                 }
             }
         }
@@ -181,18 +183,18 @@ export const useCourse = () => {
     const getPreviousLesson = (): Lesson | null => {
         if (!currentCourse.value || !currentLesson.value) return null
 
-        for (const section of currentCourse.value.sections) {
-            const currentIndex = section.lessons.findIndex(l => l.id === currentLesson.value!.id)
+        for (const module of currentCourse.value.modules) {
+            const currentIndex = module.lessons.findIndex(l => l.id === currentLesson.value!.id)
             if (currentIndex !== -1) {
-                // Check if there's a previous lesson in current section
+                // Check if there's a previous lesson in current module
                 if (currentIndex > 0) {
-                    return section.lessons[currentIndex - 1]
+                    return module.lessons[currentIndex - 1]
                 }
-                // Check previous section
-                const sectionIndex = currentCourse.value.sections.findIndex(s => s.id === section.id)
-                if (sectionIndex > 0) {
-                    const prevSection = currentCourse.value.sections[sectionIndex - 1]
-                    return prevSection.lessons[prevSection.lessons.length - 1]
+                // Check previous module
+                const moduleIndex = currentCourse.value.modules.findIndex(s => s.id === module.id)
+                if (moduleIndex > 0) {
+                    const prevmodule = currentCourse.value.modules[moduleIndex - 1]
+                    return prevmodule.lessons[prevmodule.lessons.length - 1]
                 }
             }
         }

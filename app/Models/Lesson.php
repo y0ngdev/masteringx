@@ -73,6 +73,8 @@ class Lesson extends Model
         );
     }
 
+    // TODO: to check if the lesson is free or,we would check if the user is a subscribed user. If yes, return true, if no check the record on the database
+
     public function updateVideoStatus(): void
     {
 
