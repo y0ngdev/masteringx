@@ -40,8 +40,8 @@ class TestimonialResource extends Resource
                     ->default(0),
                 Forms\Components\Select::make('status')
                     ->options([
-                        'draft' => 'Draft',
-                        'published' => 'Published',
+                        'DRAFT' => 'Draft',
+                        'PUBLISHED' => 'Published',
                     ])
                     ->required()
                     ->default('draft'),

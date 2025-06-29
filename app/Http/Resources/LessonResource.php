@@ -17,10 +17,11 @@ class LessonResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'url' => $this->video_url,
+            'slug' => $this->slug,
+            'stream_url' => $this->stream_url,
             'description' => $this->description,
             'duration' => $this->duration,
-            'canWatch' => !$this->canWatch($request->user()),
+            'canWatch' => $this->canWatch($request->user()),
         ];
     }
 }

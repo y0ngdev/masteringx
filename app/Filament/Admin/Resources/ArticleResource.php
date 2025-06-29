@@ -39,7 +39,6 @@ class ArticleResource extends Resource
                     ->maxLength(191),
 
                 MarkdownEditor::make('body')
-                    ->fileAttachmentsDisk('articles')
                     ->fileAttachmentsVisibility('public')
                     ->required()
                     ->columnSpanFull()

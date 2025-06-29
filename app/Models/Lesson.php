@@ -3,11 +3,10 @@
 namespace App\Models;
 
 //use App\Services\VimeoService;
-use Illuminate\Database\Eloquent\Attributes\Scope;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
 
 class Lesson extends Model
@@ -34,7 +33,7 @@ class Lesson extends Model
         'duration' => 'integer',
     ];
 
-    protected $appends = ['video_url'];
+    protected $appends = ['stream_url'];
 
     protected static function booted()
     {
@@ -49,34 +48,39 @@ class Lesson extends Model
         });
     }
 
-    public function module(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function module(): BelongsTo
     {
         return $this->belongsTo(Module::class, 'module_id');
     }
 
-    protected function getVideoUrlAttribute(): ?string
+    /**
+     * Get the stream URL for the lesson.
+     *
+     * This method returns the appropriate stream URL based on the video driver
+     * and the status of the lesson.
+     *
+     * @return string
+     */
+    protected function getStreamUrlAttribute(): string
     {
-        // add video statuas check
-        if ($this->status !== 'ready') {
-            return null;
-        }
-        if ($this->is_published !== 'true') {
-            return null;
+        // Block access if video isn't ready or published
+        if ($this->status !== 'READY' || !$this->is_published) {
+            return '#';
         }
 
-        if ($this->video_driver === 'vimeo') {
-            return "https://player.vimeo.com/video/{$this->video_source}";
-        }
-
-        if ($this->video_driver === 'file_system') {
-            return Storage::disk(config('filesystems.default'))->path($this->video_source);
-
-        }
-
-        return null;
-
+        return match ($this->video_driver) {
+            'VIMEO' => "https://player.vimeo.com/video/$this->video_source",
+            'FILE'  => route('watch.stream', $this->id . '.m3u8'),
+            default => '#',
+        };
     }
+    /**
+     * Get the formatted duration of the lesson.
+     *
+     * @return Attribute
+     */
 
+//    TODO: duration attribute
     protected function formattedDuration(): Attribute
     {
         return Attribute::make(
@@ -86,6 +90,14 @@ class Lesson extends Model
 
     // TODO: to check if the lesson is free or,we would check if the user is a subscribed user. If yes, return true, if no check the record on the database
 
+    /**
+     * Update the video status based on the video driver.
+     *
+     * This method checks the status of the video based on the video driver
+     * and updates the lesson's status accordingly.
+     *
+     * @return void
+     */
     public function updateVideoStatus(): void
     {
 
@@ -97,26 +109,28 @@ class Lesson extends Model
 //            }
 //        }
 
-        if ($this->video_driver === 'file_system' && $this->status !== 'ready') {
+        if ($this->video_driver === 'file' && $this->status !== 'READY') {
             // Local videos are processed immediately, so they should be ready
-            $this->update(['status' => 'ready']);
+            $this->update(['status' => 'READY']);
         }
     }
 
-    public function isLocked(?User $user): bool
+
+
+    /**
+     * Determine if the user can watch the lesson.
+     *
+     * @param User|null $user
+     * @return bool|string
+     */
+
+    public function canWatch(?User $user): bool
     {
-        // Guest users or unsubscribed users: Only can_preview = true is free
         if (!$user || !$user->subscribed()) {
-            return !$this->can_preview;
+            return (bool)$this->can_preview;
         }
 
-        // Subscribed users can view all
-        return false;
+        return true;
     }
-    public function canWatch(?User $user): string
-    {
-        return !$this->isLocked( $user);
-    }
-
 
 }

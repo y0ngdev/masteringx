@@ -5,6 +5,7 @@ export type Lesson = {
     duration: string
     canWatch:boolean
     url: string
+    stream_url:string
 }
 
 export type Module = {

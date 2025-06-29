@@ -18,7 +18,8 @@
         "spatie/filament-markdown-editor": "^2.0",
         "tightenco/ziggy": "^2.4",
         "vimeo/laravel": "^5.10",
-        "webbingbrasil/filament-copyactions": "^3.0"
+        "webbingbrasil/filament-copyactions": "^3.0",
+        "ext-fileinfo": "*"
     },
     "require-dev": {
         "driftingly/rector-laravel": "^2.0",

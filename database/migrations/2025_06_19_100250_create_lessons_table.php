@@ -18,8 +18,10 @@ return new class extends Migration {
             $table->integer('duration')->nullable();
             $table->boolean('can_preview')->default(false);
             $table->unsignedInteger('position')->default(0);
-            $table->enum('status', ['processing', 'ready', 'failed'])->default('processing');
-            $table->enum('video_driver', ['vimeo', 'file_system'])->default('file_system');
+            $table->enum('status', ['PROCESSING', 'READY', 'FAILED'])->default('PROCESSING');
+            $table->enum('video_driver', ['VIMEO', 'FILE'])->default('FILE');
+            $table->string('disk')->nullable();
+
             $table->string('video_source');
             $table->boolean('is_published')->default(false);
             $table->foreignId('module_id')->constrained()->cascadeOnDelete();

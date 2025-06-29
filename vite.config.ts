@@ -4,7 +4,7 @@ import laravel from 'laravel-vite-plugin';
 import path from 'path';
 import tailwindcss4 from 'tailwindcss-v4';
 import { defineConfig } from 'vite';
-
+import { vite as vidstack } from 'vidstack/plugins';
 export default defineConfig({
     plugins: [
         laravel({
@@ -19,8 +19,12 @@ export default defineConfig({
                     base: null,
                     includeAbsolute: false,
                 },
+                compilerOptions: {
+                    isCustomElement: (tag) => tag.startsWith('media-'),
+                },
             },
         }),
+        vidstack()
     ],
     css: {
         postcss: null,

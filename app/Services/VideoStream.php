@@ -1,10 +1,13 @@
 <?php
 
 namespace App\Services;
+
+use InvalidArgumentException;
+
 class VideoStream
 {
     private string $path;
-    private string $stream = "";
+    private ?string $stream = null;
     private int $buffer = 102400;
     private int $start = -1;
     private int $end = -1;
@@ -12,6 +15,10 @@ class VideoStream
 
     function __construct($filePath)
     {
+        if (!file_exists($filePath)) {
+            throw new InvalidArgumentException("File does not exist: $filePath");
+        }
+
         $this->path = $filePath;
     }
 
@@ -20,8 +27,10 @@ class VideoStream
      *           */
     private function open()
     {
-        if (!($this->stream = fopen($this->path, 'rb'))) {
-            die('Could not open stream for reading');
+        $this->stream = fopen($this->path, 'rb');
+        if (!$this->stream) {
+            http_response_code(500);
+            exit('Could not open stream for reading.');
         }
 
     }
@@ -32,60 +41,65 @@ class VideoStream
     private function setHeader()
     {
         ob_get_clean();
+
+        $this->size = filesize($this->path);
+        $this->start = 0;
+        $this->end = $this->size - 1;
+
         header("Content-Type: video/mp4");
         header("Cache-Control: max-age=2592000, public");
         header("Expires: " . gmdate('D, d M Y H:i:s', time() + 2592000) . ' GMT');
-        header("Last-Modified: " . gmdate('D, d M Y H:i:s', @filemtime($this->path)) . ' GMT');
-        $this->start = 0;
-        $this->size = filesize($this->path);
-        $this->end = $this->size - 1;
-        header("Accept-Ranges: 0-" . $this->end);
+        header("Last-Modified: " . gmdate('D, d M Y H:i:s', filemtime($this->path)) . ' GMT');
+        header("Accept-Ranges: bytes");
 
         if (isset($_SERVER['HTTP_RANGE'])) {
+            [, $range] = explode('=', $_SERVER['HTTP_RANGE'], 2);
 
-            $c_start = $this->start;
-            $c_end = $this->end;
-
-            list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
             if (str_contains($range, ',')) {
                 header('HTTP/1.1 416 Requested Range Not Satisfiable');
-                header("Content-Range: bytes $this->start-$this->end/$this->size");
+                header("Content-Range: bytes 0-{$this->end}/{$this->size}");
                 exit;
             }
-            if ($range === '-') {
-                $c_start = $this->size - substr($range, 1);
-            } else {
-                $range = explode('-', $range);
-                $c_start = $range[0];
 
-                $c_end = (isset($range[1]) && is_numeric($range[1])) ? $range[1] : $c_end;
+            if ($range === '-') {
+                $this->start = $this->size - (int)substr($range, 1);
+            } else {
+                [$start, $end] = explode('-', $range);
+                $this->start = (int)$start;
+                $this->end = ($end !== '' && is_numeric($end)) ? (int)$end : $this->end;
             }
-            $c_end = ($c_end > $this->end) ? $this->end : $c_end;
-            if ($c_start > $c_end || $c_start > $this->size - 1 || $c_end >= $this->size) {
+
+            // Validate range
+            if (
+                $this->start > $this->end ||
+                $this->start > $this->size - 1 ||
+                $this->end >= $this->size
+            ) {
                 header('HTTP/1.1 416 Requested Range Not Satisfiable');
-                header("Content-Range: bytes $this->start-$this->end/$this->size");
+                header("Content-Range: bytes 0-{$this->end}/{$this->size}");
                 exit;
             }
-            $this->start = $c_start;
-            $this->end = $c_end;
+
             $length = $this->end - $this->start + 1;
+
             fseek($this->stream, $this->start);
             header('HTTP/1.1 206 Partial Content');
-            header("Content-Length: " . $length);
-            header("Content-Range: bytes $this->start-$this->end/" . $this->size);
+            header("Content-Length: {$length}");
+            header("Content-Range: bytes {$this->start}-{$this->end}/{$this->size}");
         } else {
-            header("Content-Length: " . $this->size);
+            header("Content-Length: {$this->size}");
         }
 
     }
 
     /**
-     *      * close curretly opened stream
+     *      * close currently opened stream
      *           */
     private function end()
     {
-        fclose($this->stream);
-        exit;
+        if (is_resource($this->stream)) {
+            fclose($this->stream);
+        }
     }
 
     /**
@@ -93,17 +107,14 @@ class VideoStream
      *           */
     private function stream()
     {
-        $i = $this->start;
         set_time_limit(0);
-        while (!feof($this->stream) && $i <= $this->end) {
-            $bytesToRead = $this->buffer;
-            if (($i + $bytesToRead) > $this->end) {
-                $bytesToRead = $this->end - $i + 1;
-            }
-            $data = fread($this->stream, $bytesToRead);
-            echo $data;
+        $position = $this->start;
+
+        while (!feof($this->stream) && $position <= $this->end) {
+            $bytesToRead = min($this->buffer, $this->end - $position + 1);
+            echo fread($this->stream, $bytesToRead);
             flush();
-            $i += $bytesToRead;
+            $position += $bytesToRead;
         }
     }
 

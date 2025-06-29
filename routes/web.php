@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\StreamController;
 use App\Http\Resources\ModuleResource;
 use App\Models\Article;
 use App\Models\Lesson;
@@ -10,7 +11,7 @@ use Inertia\Inertia;
 Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('home');
-Route::get('/', function () {
+Route::get('/aa', function () {
     return Inertia::render('Welcome');
 })->name('buy');
 
@@ -55,17 +56,15 @@ Route::get('watch', function () {
     $module = Module::published()
         ->orderBy('order')
         ->firstOrFail();
-    $query = $module?->lessons->
-    where('is_published', true)
-        ->where('status', 'ready');
+
+    $lessons = $module?->lessons
+        ->where('is_published', true)
+        ->where('status', 'READY');
 
     $user = Auth::user();
 
-    if (!$user || !$user->subscribed()) {
-        $query->where('can_preview', true);
-    }
+    $lesson = $lessons->first(fn($lesson) => $lesson->canWatch($user));
 
-    $lesson = $query->first();
     if (!$lesson) {
         return redirect()->route('home');
     }
@@ -89,6 +88,11 @@ Route::get('watch/{slug}', function () {
     ]);
 })->name('watch.lesson');
 
+Route::get('s/{lesson}', [StreamController::class, 'stream']);
+
+
+Route::get('/stream/{path}', [StreamController::class, 'handle'])
+    ->where('path', '.*')->name('watch.stream');
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

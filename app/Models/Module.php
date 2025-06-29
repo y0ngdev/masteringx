@@ -38,9 +38,9 @@ class Module extends Model
     #[Scope]
     protected function published(Builder $query): void
     {
-//        TODO: PUBLISHED
+
         $query->withAttributes([
-            'status' => 'published',
+            'status' => 'PUBLISHED',
         ]);
     }
 }

@@ -2,12 +2,16 @@
 import Footer from '@/components/landing/Footer.vue';
 import Navbar from '@/components/landing/Navbar.vue';
 import { VueMarkdownIt } from '@f3ve/vue-markdown-it';
-import { usePage } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
+import { abbr } from '@mdit/plugin-abbr';
+import { mark } from '@mdit/plugin-mark';
+import { sub } from '@mdit/plugin-sub';
+import { sup } from '@mdit/plugin-sup';
+import { tasklist } from '@mdit/plugin-tasklist';
+import Shiki from '@shikijs/markdown-it';
 import { Calendar, User } from 'lucide-vue-next';
-import { computed } from 'vue';
-import { tasklist } from "@mdit/plugin-tasklist";
-import { mark } from "@mdit/plugin-mark";
-import shiki from '@shikijs/markdown-it'
+import { computed, onMounted, ref } from 'vue';
+
 type Article = {
     id: string;
     title: string;
@@ -30,17 +34,31 @@ const formattedDate = computed(() =>
     }),
 );
 
-const opt=[
+const opt = ref([
     tasklist,
     mark,
-    shiki({
-        theme: 'min-dark',
-        inlineCode: true,
-        codeBlock: true,
-    }),
-]
+    abbr,
+    sub,
+    sup,
 
+    // shiki({
+    //     theme: 'min-dark',
+    //     inlineCode: true,
+    //     codeBlock: true,
+    // }),
+]);
 
+// onMounted(async () => {
+    // TODO
+    // Initialize any additional plugins or settings if needed
+    // const ski = await Shiki({
+    //     theme: 'vitesse-dark',
+    //     lang:'php',
+    //     inlineCode: true,
+    //     codeBlock: true,
+    // });
+    // opt.value.push(ski);
+// });
 // useSeoMeta({
 //     ogType: 'article',
 //     author: 'Harlan Wilton',
@@ -55,6 +73,7 @@ const opt=[
 </script>
 
 <template>
+    <Head :title="article.title" />
     <div class="bg-background text-foreground min-h-screen">
         <!-- Header -->
         <Navbar />
@@ -79,11 +98,7 @@ const opt=[
 
             <!-- Markdown Content -->
 
-            <VueMarkdownIt
-                :source="article.body"
-                class="prose dark:prose-invert max-w-none"
-            :plugins="opt"
-            />
+            <VueMarkdownIt :source="article.body" class="prose dark:prose-invert max-w-none" :plugins="opt" />
         </article>
 
         <Footer />

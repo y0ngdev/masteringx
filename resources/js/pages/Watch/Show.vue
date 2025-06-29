@@ -10,8 +10,6 @@ import { Lesson, Module } from '@/types/course';
 
 const { currentCourse, currentLesson, initializeCourse, selectLesson, markLessonComplete, getNextLesson, getPreviousLesson } = useCourse();
 
-
-
 defineProps<{
     lesson: Lesson;
     modules: Module[];
@@ -78,25 +76,32 @@ onMounted(() => {
 
     <SidebarProvider>
         <CourseNav />
-        <Sidebar class="mt-16" v-if="currentCourse" :course="currentCourse" :modules="modules" :current-lesson="currentLesson" @select-lesson="handleLessonSelect" />
+        <Sidebar
+            class="mt-16"
+            v-if="currentCourse"
+            :course="currentCourse"
+            :modules="modules"
+            :current-lesson="currentLesson"
+            @select-lesson="handleLessonSelect"
+        />
         <SidebarInset class="mt-16">
             <!-- Video player area -->
             <div class="flex flex-1 flex-col">
                 <!-- Video container -->
                 <div class="bg-muted/2 flex flex-1 items-center justify-center">
-                    <div class=" w-full">
-                        <VideoPlayer
-                            v-if="currentLesson?.videoUrl"
-                            :src="currentLesson.videoUrl"
-                            @time-update="handleVideoTimeUpdate"
-                            @ended="handleVideoEnded"
-                        />
-                        <div v-else class="bg-muted flex h-full w-full items-center justify-center">
-                            <div class="text-center">
-                                <h3 class="mb-2 text-lg font-medium">No video selected</h3>
-                                <p class="text-muted-foreground">Choose a lesson from the sidebar to start learning</p>
-                            </div>
-                        </div>
+                    <div class="w-full">
+                        <!--                        v-if="currentLesson?.videoUrl"-->
+                        <!--                        @time-update="handleVideoTimeUpdate"-->
+                        <!--                        @ended="handleVideoEnded"-->
+                        <!---->
+
+                        <VideoPlayer :title="lesson.title" :src="lesson.stream_url" />
+                        <!--                        <div v-else class="bg-muted flex h-full w-full items-center justify-center">-->
+                        <!--                            <div class="text-center">-->
+                        <!--                                <h3 class="mb-2 text-lg font-medium">No video selected</h3>-->
+                        <!--                                <p class="text-muted-foreground">Choose a lesson from the sidebar to start learning</p>-->
+                        <!--                            </div>-->
+                        <!--                        </div>-->
                     </div>
                 </div>
 

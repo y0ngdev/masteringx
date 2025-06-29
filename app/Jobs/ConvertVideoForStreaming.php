@@ -39,10 +39,10 @@ class ConvertVideoForStreaming implements ShouldQueue
         $highBitrateFormat = (new X264)->setKiloBitrate(3000);
 //add
         $p = 'lessons/' . $this->lesson->module->title . '/' . $this->lesson->title . '/' . $this->lesson->id . '.m3u8';
-        FFMpeg::fromDisk(config('filesystems.default'))
+        FFMpeg::fromDisk($this->lesson->disk)
             ->open($this->lesson->video_source)
             ->exportForHLS()
-            ->toDisk(config('filesystems.default'))
+            ->toDisk($this->lesson->disk)
             ->addFormat($lowBitrateFormat)
             ->addFormat($midBitrateFormat)
             ->addFormat($highBitrateFormat)
@@ -52,7 +52,7 @@ class ConvertVideoForStreaming implements ShouldQueue
 
         $this->lesson->update([
             'video_source' => $p,
-            'status' => 'ready',
+            'status' => 'READY',
         ]);
 
     }
