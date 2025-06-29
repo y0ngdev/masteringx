@@ -11,6 +11,7 @@ defineProps<{
 
         <media-player :title="title" :src="src" autoplay>
             <media-provider></media-provider>
+
             <media-video-layout ></media-video-layout>
         </media-player>
 

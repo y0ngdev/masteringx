@@ -12,15 +12,13 @@ import {
     SidebarMenuSubItem,
     SidebarRail,
 } from '@/components/ui/sidebar';
-import { Course, Lesson, Module } from '@/types/course';
+import { Lesson, Module } from '@/types/course';
 import { Link } from '@inertiajs/vue3';
 import { ChevronDown, ChevronUp, Circle, Lock } from 'lucide-vue-next';
-import { ref } from 'vue';
 
 interface Props {
-    course: Course;
+    lessonID: number;
     modules: Module;
-    currentLesson?: Lesson | null;
 }
 
 const props = defineProps<Props>();
@@ -29,17 +27,11 @@ const emit = defineEmits<{
     selectLesson: [lesson: Lesson];
 }>();
 
-const expandedmodules = ref<Set<string>>(new Set(['module-1', 'module-2', 'module-3']));
-
-const togglemodule = (moduleId: string) => {
-    if (expandedmodules.value.has(moduleId)) {
-        expandedmodules.value.delete(moduleId);
-    } else {
-        expandedmodules.value.add(moduleId);
+const isActive = (id) => {
+    if (id == props.lessonID) {
+        return true;
     }
 };
-
-const isActive = (lesson) => {};
 </script>
 
 <template>
@@ -64,12 +56,12 @@ const isActive = (lesson) => {};
                                         v-for="lesson in item.lessons"
                                         :key="lesson.title"
                                         class="border-l-1 -ml-[0.690rem] mb-4 cursor-pointer"
-                                        :class="{ 'border-zinc-200': lesson.isActive, '': lesson.completed }"
+                                        :class="{ 'border-zinc-200': isActive(lesson.id), '': lesson.completed }"
                                     >
                                         <SidebarMenuSubButton
                                             size="sm"
                                             as-child
-                                            :is-active="lesson.isActive"
+                                            :is-active="isActive(lesson.id)"
                                             class="min truncate py-2.5 font-medium text-zinc-600"
                                         >
                                             <Link :href="lesson.url" class="flex w-full items-center justify-between py-2">

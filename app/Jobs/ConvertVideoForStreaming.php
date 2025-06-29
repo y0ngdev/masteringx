@@ -47,7 +47,7 @@ class ConvertVideoForStreaming implements ShouldQueue
             ->addFormat($midBitrateFormat)
             ->addFormat($highBitrateFormat)
             ->save($p);
-
+//TODO ADD VTT suport
         Storage::delete($this->lesson->video_source);
 
         $this->lesson->update([

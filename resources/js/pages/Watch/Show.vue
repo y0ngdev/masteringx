@@ -5,8 +5,8 @@ import Sidebar from '@/components/watch/CourseSidebar.vue';
 import LessonNavigation from '@/components/watch/LessonNavigation.vue';
 import VideoPlayer from '@/components/watch/VideoPlayer.vue';
 import { useCourse } from '@/composables/useCourse';
-import { computed, onMounted, ref } from 'vue';
 import { Lesson, Module } from '@/types/course';
+import { computed, onMounted, ref } from 'vue';
 
 const { currentCourse, currentLesson, initializeCourse, selectLesson, markLessonComplete, getNextLesson, getPreviousLesson } = useCourse();
 
@@ -76,14 +76,7 @@ onMounted(() => {
 
     <SidebarProvider>
         <CourseNav />
-        <Sidebar
-            class="mt-16"
-            v-if="currentCourse"
-            :course="currentCourse"
-            :modules="modules"
-            :current-lesson="currentLesson"
-            @select-lesson="handleLessonSelect"
-        />
+        <Sidebar class="mt-16" v-if="currentCourse" :lessonID="lesson.id" :modules="modules" />
         <SidebarInset class="mt-16">
             <!-- Video player area -->
             <div class="flex flex-1 flex-col">
