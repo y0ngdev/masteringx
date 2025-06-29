@@ -6,13 +6,12 @@ import autoprefixer from 'autoprefixer';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/filament/admin/theme.css'],
+            input: [],
             refresh: true,
         }),
     ],
     css: {
         postcss: {
-            from:'./postcss.config..filament.js',
             plugins: [
                 tailwindcss(),
                 autoprefixer(),

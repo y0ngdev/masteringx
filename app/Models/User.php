@@ -10,12 +10,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Cashier\Billable;
 
-class User extends Authenticatable implements MustVerifyEmail, FilamentUser
+class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes;
-
+    use Billable;
+    use HasFactory;
+    use Notifiable;
+    use SoftDeletes;
 
     /**
      * The attributes that are not mass assignable.
@@ -35,8 +37,6 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         'password',
         'remember_token',
     ];
-
-
 
     /**
      * Get the attributes that should be cast.
@@ -62,7 +62,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
     public function disabled(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->trashed(),
+            get: fn () => $this->trashed(),
         );
 
     }
@@ -73,11 +73,10 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
     public function emailVerified(): Attribute
     {
         return Attribute::make(
-            get: fn() => filled($this->email_verified_at),
+            get: fn () => filled($this->email_verified_at),
         );
 
     }
-
 
     public function canAccessPanel(Panel $panel): bool
     {

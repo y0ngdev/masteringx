@@ -27,7 +27,6 @@ class AdminPanelProvider extends PanelProvider
     {
         $this->renderAnalyticsIfCredentialsExist();
 
-
         return $panel
             ->default()
             ->id('admin')
@@ -47,24 +46,23 @@ class AdminPanelProvider extends PanelProvider
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
 
-
                 //                StatsOverview::class,
-//                LatestUsers::class,
+                //                LatestUsers::class,
 
                 ...$this->dynamicWidgets,
 
                 // Google Analytics Widgets that are available here: https://filamentphp.com/plugins/bezhansalleh-google-analytics
-//                \BezhanSalleh\FilamentGoogleAnalytics\Widgets\PageViewsWidget::class,
-//                \BezhanSalleh\FilamentGoogleAnalytics\Widgets\VisitorsWidget::class,
-//                \BezhanSalleh\FilamentGoogleAnalytics\Widgets\ActiveUsersOneDayWidget::class,
-//                \BezhanSalleh\FilamentGoogleAnalytics\Widgets\ActiveUsersSevenDayWidget::class,
-//                \BezhanSalleh\FilamentGoogleAnalytics\Widgets\ActiveUsersTwentyEightDayWidget::class,
-//                \BezhanSalleh\FilamentGoogleAnalytics\Widgets\SessionsWidget::class,
-//                \BezhanSalleh\FilamentGoogleAnalytics\Widgets\SessionsDurationWidget::class,
-//                \BezhanSalleh\FilamentGoogleAnalytics\Widgets\SessionsByCountryWidget::class,
-//                \BezhanSalleh\FilamentGoogleAnalytics\Widgets\SessionsByDeviceWidget::class,
-//                \BezhanSalleh\FilamentGoogleAnalytics\Widgets\MostVisitedPagesWidget::class,
-//                \BezhanSalleh\FilamentGoogleAnalytics\Widgets\TopReferrersListWidget::class,
+                //                \BezhanSalleh\FilamentGoogleAnalytics\Widgets\PageViewsWidget::class,
+                //                \BezhanSalleh\FilamentGoogleAnalytics\Widgets\VisitorsWidget::class,
+                //                \BezhanSalleh\FilamentGoogleAnalytics\Widgets\ActiveUsersOneDayWidget::class,
+                //                \BezhanSalleh\FilamentGoogleAnalytics\Widgets\ActiveUsersSevenDayWidget::class,
+                //                \BezhanSalleh\FilamentGoogleAnalytics\Widgets\ActiveUsersTwentyEightDayWidget::class,
+                //                \BezhanSalleh\FilamentGoogleAnalytics\Widgets\SessionsWidget::class,
+                //                \BezhanSalleh\FilamentGoogleAnalytics\Widgets\SessionsDurationWidget::class,
+                //                \BezhanSalleh\FilamentGoogleAnalytics\Widgets\SessionsByCountryWidget::class,
+                //                \BezhanSalleh\FilamentGoogleAnalytics\Widgets\SessionsByDeviceWidget::class,
+                //                \BezhanSalleh\FilamentGoogleAnalytics\Widgets\MostVisitedPagesWidget::class,
+                //                \BezhanSalleh\FilamentGoogleAnalytics\Widgets\TopReferrersListWidget::class,
 
             ])
             ->middleware([
@@ -82,10 +80,11 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ]);
     }
+
     // This function will render if user has account crenditals file
     // located at storage/app/analytics/service-account-credentials.json
     // Find More details here: https://github.com/spatie/laravel-analytics
-    private function renderAnalyticsIfCredentialsExist()
+    private function renderAnalyticsIfCredentialsExist(): void
     {
         if (file_exists(storage_path('app/analytics/service-account-credentials.json'))) {
             Config::set('filament-google-analytics.page_views.filament_dashboard', true);
@@ -95,15 +94,9 @@ class AdminPanelProvider extends PanelProvider
             Config::set('filament-google-analytics.most_visited_pages.filament_dashboard', true);
             Config::set('filament-google-analytics.top_referrers_list.filament_dashboard', true);
         }
-//        else {
-//            $this->dynamicWidgets = [Analytics::class];
-//        }
+
+        //        else {
+        //            $this->dynamicWidgets = [Analytics::class];
+        //        }
     }
-
 }
-
-
-
-
-
-
