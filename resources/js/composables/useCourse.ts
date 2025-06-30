@@ -1,10 +1,9 @@
 import type { Course, Lesson } from '@/types/course';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 
 export const useCourse = () => {
     const currentCourse = ref<Course | null>(null);
     const currentLesson = ref<Lesson | null>(null);
-
 
     // Mock course data
     const mockCourse: Course = {
@@ -116,15 +115,14 @@ export const useCourse = () => {
         ],
     };
 
-     const initializeCourse = () => {
+    const initializeCourse = () => {
         currentCourse.value = mockCourse;
         currentLesson.value = mockCourse.modules[0].lessons[1]; // Start with first incomplete lesson
     };
 
     const selectLesson = (lesson: Lesson) => {
         currentLesson.value = lesson;
-
-  };
+    };
 
     const markLessonComplete = (lessonId: string) => {
         if (!currentCourse.value) return;

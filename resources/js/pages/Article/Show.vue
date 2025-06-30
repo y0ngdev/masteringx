@@ -8,9 +8,8 @@ import { mark } from '@mdit/plugin-mark';
 import { sub } from '@mdit/plugin-sub';
 import { sup } from '@mdit/plugin-sup';
 import { tasklist } from '@mdit/plugin-tasklist';
-import Shiki from '@shikijs/markdown-it';
 import { Calendar, User } from 'lucide-vue-next';
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 type Article = {
     id: string;
@@ -49,15 +48,15 @@ const opt = ref([
 ]);
 
 // onMounted(async () => {
-    // TODO
-    // Initialize any additional plugins or settings if needed
-    // const ski = await Shiki({
-    //     theme: 'vitesse-dark',
-    //     lang:'php',
-    //     inlineCode: true,
-    //     codeBlock: true,
-    // });
-    // opt.value.push(ski);
+// TODO
+// Initialize any additional plugins or settings if needed
+// const ski = await Shiki({
+//     theme: 'vitesse-dark',
+//     lang:'php',
+//     inlineCode: true,
+//     codeBlock: true,
+// });
+// opt.value.push(ski);
 // });
 // useSeoMeta({
 //     ogType: 'article',

@@ -21,10 +21,11 @@ return new class extends Migration {
             $table->enum('status', ['PROCESSING', 'READY', 'FAILED'])->default('PROCESSING');
             $table->enum('video_driver', ['VIMEO', 'FILE'])->default('FILE');
             $table->string('disk')->nullable();
-
             $table->string('video_source');
             $table->boolean('is_published')->default(false);
             $table->foreignId('module_id')->constrained()->cascadeOnDelete();
+
+            $table->unique(['module_id','position']);
             $table->timestamps();
         });
     }

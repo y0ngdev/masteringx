@@ -33,7 +33,7 @@ class Module extends Model
     }
 
     /**
-     * Scope the query to only include published articles.
+     * Scope the query to only include published module.
      */
     #[Scope]
     protected function published(Builder $query): void

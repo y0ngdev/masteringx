@@ -3,10 +3,14 @@
 namespace App\Models;
 
 //use App\Services\VimeoService;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 
 class Lesson extends Model
@@ -32,6 +36,8 @@ class Lesson extends Model
         'is_published' => 'boolean',
         'duration' => 'integer',
     ];
+
+
 
     protected $appends = ['stream_url'];
 
@@ -67,24 +73,58 @@ class Lesson extends Model
         if ($this->status !== 'READY' || !$this->is_published) {
             return '#';
         }
+        if (!$this->canWatch(Auth::user())) {
+            return '#';
+        }
+
+        //TODO        $token = $this->generateAccessToken();
+
 
         return match ($this->video_driver) {
             'VIMEO' => "https://player.vimeo.com/video/$this->video_source",
-            'FILE'  => route('watch.stream', $this->id . '.m3u8'),
+            'FILE' => route('watch.stream', [
+                'path' => $this->id . '.m3u8',
+//                'token' => $token,
+            ]),
             default => '#',
         };
     }
+
     /**
      * Get the formatted duration of the lesson.
      *
      * @return Attribute
      */
 
+    public function generateAccessToken(): string
+    {
+        return Crypt::encrypt([
+            'user_id' => Auth::id(),
+            'lesson_id' => $this->id,
+            'expires' => now()->addMinutes(30)->timestamp,
+        ]);
+    }
+
+    public function isValidAccessToken(string $token, ?User $user): bool
+    {
+        try {
+            $data = Crypt::decrypt($token);
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return $data['user_id'] === $user->id
+            && $data['lesson_id'] === $this->id
+            && $data['expires'] >= now()->timestamp
+            && $this->canWatch($user);
+    }
+
+
 //    TODO: duration attribute
-    protected function formattedDuration(): Attribute
+    protected function duration(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->duration ? gmdate('H:i:s', $this->duration) : '00:00:00',
+            get: static fn($value) => $value ? gmdate('H:i:s',$value) : '00:00:00',
         );
     }
 
@@ -116,7 +156,6 @@ class Lesson extends Model
     }
 
 
-
     /**
      * Determine if the user can watch the lesson.
      *
@@ -131,6 +170,17 @@ class Lesson extends Model
         }
 
         return true;
+    }
+
+    /**
+     * Scope the query to only include ready lessons.
+     */
+    #[Scope]
+    protected function ready(Builder $query): void
+    {
+        $query->withAttributes([
+            'status' => 'READY',
+        ]);
     }
 
 }

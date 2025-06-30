@@ -76,23 +76,23 @@ Route::get('watch', function () {
 Route::get('watch/{slug}', function () {
 
 
-    $modules = Module::published()->with('lessons')
+    $modules = Module::published()
+        ->with(['lessons' => fn ($query) => $query->ready()])
         ->orderBy('order')
         ->get();
 
 
+
     return Inertia::render('Watch/Show', [
-        'lesson' => Lesson::where('slug', request()->route('slug'))->firstOrFail(),
+        'lesson' => Lesson::ready()->where('slug', request()->route('slug'))->firstOrFail()->toResource(),
         'modules' => new ModuleResource($modules),
 
     ]);
 })->name('watch.lesson');
 
-Route::get('s/{lesson}', [StreamController::class, 'stream']);
 
 
-Route::get('/stream/{path}', [StreamController::class, 'handle'])
-    ->where('path', '.*')->name('watch.stream');
+Route::get('/stream/{path}', [StreamController::class, 'handle'])->where('path', '.*')->name('watch.stream');
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

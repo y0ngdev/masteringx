@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Unique;
 use Spatie\FilamentMarkdownEditor\MarkdownEditor;
 
 //use App\Services\VimeoService;
@@ -34,8 +35,7 @@ class LessonResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn(Set $set, ?string $state): mixed => $set('slug', Str::slug($state)))
-
-                    //                    ->required()
+                    ->required()
                     ->maxLength(255),
 
                 Forms\Components\TextInput::make('slug')
@@ -51,7 +51,11 @@ class LessonResource extends Resource
 
                 Forms\Components\TextInput::make('position')
                     ->numeric()
-                    ->unique()
+                    ->unique(modifyRuleUsing: function (Unique $rule, callable $get) {
+                        return $rule
+                            ->where('module_id', $get('module_id'))
+                            ->where('position', $get('position'));
+                    })
                     ->default(0),
 
                 MarkdownEditor::make('description')
@@ -73,6 +77,9 @@ class LessonResource extends Resource
                 ,
 
                 Forms\Components\Hidden::make('status')->default('processing'),
+                Forms\Components\TextInput::make('disk')->default(config('filesystems.default'))
+                    ->hidden()
+                ,
 
                 Forms\Components\TextInput::make('duration')
                     ->numeric()
@@ -117,9 +124,9 @@ class LessonResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
-                        'ready' => 'success',
-                        'processing' => 'warning',
-                        'failed' => 'danger',
+                        'READY' => 'success',
+                        'PROCESSING' => 'warning',
+                        'FAILED' => 'danger',
                     }),
                 Tables\Columns\IconColumn::make('is_published')
                     ->boolean()
@@ -128,9 +135,9 @@ class LessonResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->options([
-                        'processing' => 'Processing',
-                        'ready' => 'Ready',
-                        'failed' => 'Failed',
+                        'PROCESSING' => 'Processing',
+                        'READY' => 'Ready',
+                        'FAILED' => 'Failed',
                     ]),
                 Tables\Filters\SelectFilter::make('is_pre-viewable')
                     ->label('Preview Type')

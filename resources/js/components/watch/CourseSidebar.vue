@@ -10,14 +10,13 @@ import {
     SidebarMenuSub,
     SidebarMenuSubButton,
     SidebarMenuSubItem,
-    SidebarRail,
 } from '@/components/ui/sidebar';
 import { Lesson, Module } from '@/types/course';
 import { Link } from '@inertiajs/vue3';
 import { ChevronDown, ChevronUp, Circle, Lock } from 'lucide-vue-next';
 
 interface Props {
-    lessonID: number;
+    lesson: Lesson;
     modules: Module;
 }
 
@@ -28,7 +27,7 @@ const emit = defineEmits<{
 }>();
 
 const isActive = (id) => {
-    if (id == props.lessonID) {
+    if (id == props.lesson.id) {
         return true;
     }
 };
@@ -40,7 +39,7 @@ const isActive = (id) => {
             <SidebarGroup>
                 <SidebarMenu>
                     <!--                   Todo: this is here the where the collapsible default open is configured -->
-                    <Collapsible v-for="(item, index) in modules" :key="item.id" :default-open="index === 0" class="group/collapsible">
+                    <Collapsible v-for="item in modules" :key="item.id" :default-open="item.id === lesson.moduleID" class="group/collapsible">
                         <SidebarMenuItem>
                             <CollapsibleTrigger as-child>
                                 <SidebarMenuButton size="sm" :tooltip="item.title" class="truncate text-zinc-300">
@@ -83,6 +82,5 @@ const isActive = (id) => {
                 </SidebarMenu>
             </SidebarGroup>
         </SidebarContent>
-        <SidebarRail />
     </Sidebar>
 </template>

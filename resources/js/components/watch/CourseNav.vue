@@ -37,21 +37,14 @@ onBeforeUnmount(() => {
     document.removeEventListener('click', handleClickOutside);
     window.removeEventListener('resize', handleResize);
 });
-
-const navigation = [
-    { name: 'About', href: '#about' },
-    { name: 'Pricing', href: '#pricing' },
-    { name: 'Articles', href: route('articles') }
-    // { name: 'Watch', href: route('watch') },
-];
 </script>
 
 <template>
     <header
-        class="bg-background/80 fixed z-50 flex h-16 w-full shrink-0 items-center border-[0.1px] backdrop-blur-sm transition-all duration-300"
+        class="bg-background/80 fixed z-50 flex h-16 w-full shrink-0 items-center border-[0.1px] border-b transition-all duration-300"
         :class="{ 'border-b': isScrolled }"
     >
-        <div class="container mx-auto px-4 ">
+        <div class="container mx-auto px-4">
             <nav class="flex items-center justify-between">
                 <div class="flex items-center">
                     <div class="flex items-center">
@@ -70,17 +63,12 @@ const navigation = [
                     </div>
                 </div>
 
-
                 <div class="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
                     <div class="items-center space-x-6 text-sm">
-                        <a :href="route('login')"
-                           class="text-muted-foreground hover:text-foreground font-medium transition-colors"> Sign
-                            in </a>
-                        <Button class="transition duration-300 hover:scale-105" size="sm" as="a" :href="route('buy')">
-                            Buy Now
-                        </Button>
+                        <a :href="route('login')" class="text-muted-foreground hover:text-foreground font-medium transition-colors"> Sign in </a>
+                        <Button class="transition duration-300 hover:scale-105" size="sm" as="a" :href="route('buy')"> Buy Now </Button>
                     </div>
-<!--                    Todo: only show on mobile-->
+                    <!--                    Todo: only show on mobile-->
                     <SidebarTrigger class="ml-2" />
                 </div>
             </nav>

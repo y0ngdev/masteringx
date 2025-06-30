@@ -29,7 +29,6 @@ const courseFeatures = [
     },
 ];
 
-
 const baseTeamPrice = 199;
 const pricePerSeat = 49;
 const teamSeats = ref(5);
@@ -38,11 +37,11 @@ const seatOptions = [
     { value: 10, label: '10 seats' },
     { value: 20, label: '20 seats' },
     { value: 50, label: '50 seats' },
-    { value: 'contact', label: 'Need more seats?' }
+    { value: 'contact', label: 'Need more seats?' },
 ];
 const calculatedTeamPrice = computed(() => {
     if (teamSeats.value === 'contact') return null;
-    return baseTeamPrice + (teamSeats.value * pricePerSeat);
+    return baseTeamPrice + teamSeats.value * pricePerSeat;
 });
 
 const pricingPlans = [

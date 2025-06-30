@@ -76,7 +76,7 @@
     ::file-selector-button {
         border-color: var(--color-gray-200, currentColor);
     }
-  :root {
+    :root {
         --sidebar-background: 0 0% 98%;
         --sidebar-foreground: 240 5.3% 26.1%;
         --sidebar-primary: 240 5.9% 10%;
@@ -86,7 +86,7 @@
         --sidebar-border: 220 13% 91%;
         --sidebar-ring: 217.2 91.2% 59.8%;
     }
-  .dark {
+    .dark {
         --sidebar-background: 240 5.9% 10%;
         --sidebar-foreground: 240 4.8% 95.9%;
         --sidebar-primary: 224.3 76.3% 48%;
@@ -188,29 +188,32 @@
     }
 }
 
-
 @layer base {
     button:not([disabled]),
-    [role="button"]:not([disabled]) {
+    [role='button']:not([disabled]) {
         cursor: pointer;
     }
 }
 
 :root {
     font-family: Inter, sans-serif;
-    font-feature-settings: 'liga' 1, 'calt' 1; /* fix for Chrome */
+    font-feature-settings:
+        'liga' 1,
+        'calt' 1; /* fix for Chrome */
 }
 @supports (font-variation-settings: normal) {
-    :root { font-family: InterVariable, sans-serif; }
+    :root {
+        font-family: InterVariable, sans-serif;
+    }
 }
 /*
   ---break---
 */
 @layer base {
-  * {
-    @apply border-border;
+    * {
+        @apply border-border;
     }
-  body {
-    @apply bg-background text-foreground;
+    body {
+        @apply bg-background text-foreground;
     }
 }
