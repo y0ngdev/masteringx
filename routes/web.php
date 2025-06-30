@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\StreamController;
+use App\Http\Controllers\WatchController;
 use App\Http\Resources\ModuleResource;
 use App\Models\Article;
 use App\Models\Lesson;
@@ -51,44 +52,10 @@ Route::get('article/{slug}', function () {
     ]);
 })->name('articles.show');
 
-Route::get('watch', function () {
-
-    $module = Module::published()
-        ->orderBy('order')
-        ->firstOrFail();
-
-    $lessons = $module?->lessons
-        ->where('is_published', true)
-        ->where('status', 'READY');
-
-    $user = Auth::user();
-
-    $lesson = $lessons->first(fn($lesson) => $lesson->canWatch($user));
-
-    if (!$lesson) {
-        return redirect()->route('home');
-    }
-
-    return redirect()->route('watch.lesson', $lesson->slug);
-})->name('watch');
+Route::get('watch', [WatchController::class,'index'])->name('watch');
 
 
-Route::get('watch/{slug}', function () {
-
-
-    $modules = Module::published()
-        ->with(['lessons' => fn ($query) => $query->ready()])
-        ->orderBy('order')
-        ->get();
-
-
-
-    return Inertia::render('Watch/Show', [
-        'lesson' => Lesson::ready()->where('slug', request()->route('slug'))->firstOrFail()->toResource(),
-        'modules' => new ModuleResource($modules),
-
-    ]);
-})->name('watch.lesson');
+Route::get('watch/{slug}',[WatchController::class,'handle'])->name('watch.lesson');
 
 
 
