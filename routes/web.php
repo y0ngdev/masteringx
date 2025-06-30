@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\IndexController;
 use App\Http\Controllers\StreamController;
 use App\Http\Controllers\WatchController;
 use App\Http\Resources\ModuleResource;
@@ -9,9 +10,7 @@ use App\Models\Module;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome');
-})->name('home');
+Route::get('/',[IndexController::class,'index'])->name('home');
 Route::get('/aa', function () {
     return Inertia::render('Welcome');
 })->name('buy');
@@ -54,10 +53,7 @@ Route::get('article/{slug}', function () {
 
 Route::get('watch', [WatchController::class,'index'])->name('watch');
 
-
 Route::get('watch/{slug}',[WatchController::class,'handle'])->name('watch.lesson');
-
-
 
 Route::get('/stream/{path}', [StreamController::class, 'handle'])->where('path', '.*')->name('watch.stream');
 
