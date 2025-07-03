@@ -11,9 +11,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/',[IndexController::class,'index'])->name('home');
-Route::get('/aa', function () {
-    return Inertia::render('Welcome');
-})->name('buy');
+Route::post('/buy',[IndexController::class,'buy'])->name('buy');
 
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');

@@ -120,7 +120,7 @@ class Lesson extends Model
     }
 
 
-//    TODO: duration attribute
+
     protected function duration(): Attribute
     {
         return Attribute::make(

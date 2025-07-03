@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Link } from '@inertiajs/vue3';
 import { useWindowScroll } from '@vueuse/core';
 import { Menu, ShoppingCart, X } from 'lucide-vue-next';
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
 const isOpen = ref(false);
 const isScrolled = ref(false);
@@ -40,11 +40,11 @@ onBeforeUnmount(() => {
 });
 
 const navigation = [
-    { name: 'About', href: '#about' },
-    { name: 'Pricing', href: '#pricing' },
     { name: 'Articles', href: route('articles') },
     { name: 'Watch', href: route('watch') },
 ];
+
+const isHome = computed(() => window.location.pathname === '/');
 </script>
 
 <template>
@@ -72,6 +72,20 @@ const navigation = [
 
                     <!-- Desktop Navigation -->
                     <div class="hidden items-center space-x-6 text-sm md:flex">
+                        <div class="space-x-6" v-if="isHome">
+                            <a
+                                href="/#about"
+                                class="text-muted-foreground hover:text-foreground after:bg-primary relative font-medium transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:transition-all after:duration-300 hover:after:w-full"
+                            >
+                                About</a
+                            >
+                            <a
+                                href="/#pricing"
+                                class="text-muted-foreground hover:text-foreground after:bg-primary relative font-medium transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:transition-all after:duration-300 hover:after:w-full"
+                            >
+                                Pricing</a
+                            >
+                        </div>
                         <Link
                             v-for="item in navigation"
                             :key="item.name"
@@ -86,10 +100,13 @@ const navigation = [
                 <!-- Desktop Navigation -->
                 <div class="hidden items-center space-x-6 text-sm md:flex">
                     <a :href="route('login')" class="text-muted-foreground hover:text-foreground font-medium transition-colors"> Sign in </a>
-                    <Button class="transition duration-300 hover:scale-105" as="a" :href="route('buy')">
-                        <ShoppingCart class="mr-2 h-4 w-4" />
-                        Buy Now
-                    </Button>
+
+                    <Link :href="route('home') + '#pricing'">
+                        <Button class="transition duration-300 hover:scale-105" size="sm">
+                            <ShoppingCart class="mr-2 h-4 w-4" />
+                            Buy Now
+                        </Button>
+                    </Link>
                 </div>
 
                 <!-- Mobile Navigation Button -->

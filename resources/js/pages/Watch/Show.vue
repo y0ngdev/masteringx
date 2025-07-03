@@ -16,12 +16,15 @@ import { tasklist } from '@mdit/plugin-tasklist';
 import { computed, onMounted, ref } from 'vue';
 
 import { Button } from '@/components/ui/button';
+import { Link } from '@inertiajs/vue3';
+import { Pricing } from '@/types';
 
 const { currentCourse, currentLesson, initializeCourse, selectLesson, markLessonComplete, getNextLesson, getPreviousLesson } = useCourse();
 
 defineProps<{
     lesson: Lesson;
     modules: Module[];
+    pricing: Pricing;
 }>();
 
 const videoProgress = ref(0);
@@ -103,14 +106,15 @@ const opt = ref([tasklist, mark, abbr, sub, sup]);
                             <div>
                                 <h3 class="mb-2 text-lg font-semibold">Full Course</h3>
                                 <div class="flex items-baseline gap-2">
-                                    <span class="text-3xl font-bold">$349</span>
+                                    <span class="text-3xl font-bold">{{pricing.price}}</span>
                                     <span v-if="0 === '0'" class="text-muted-foreground text-sm line-through">$399</span>
                                 </div>
-                                <p class="text-muted-foreground text-sm">USD, one-time fee</p>
+                                <p class="text-muted-foreground text-sm"> one-time fee</p>
                             </div>
 
-                            <Button class="transition duration-300 hover:scale-105" size="sm" as="a" :href="route('buy')"> Buy Now </Button>
-
+                            <Button class="transition duration-300 hover:scale-105" size="sm">
+                                <Link :href="route('home')+'#pricing'"> Buy Now </Link>
+                            </Button>
                             <div class="space-y-4" v-if="0 === '0'">
                                 <div class="flex items-center gap-1">
                                     <!-- Star ratings -->

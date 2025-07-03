@@ -5,6 +5,17 @@ export interface Auth {
     user: User;
 }
 
+export interface Plan {
+    id: number;
+    name: string;
+    short_description: string;
+    gateway_meta: object;
+    price: number;
+    features: Array;
+    is_featured: string;
+    sort_order: number;
+}
+
 export interface BreadcrumbItem {
     title: string;
     href: string;

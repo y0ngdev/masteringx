@@ -4,12 +4,19 @@ import Hero from '@/components/landing/Hero.vue';
 import Navbar from '@/components/landing/Navbar.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Head } from '@inertiajs/vue3';
-import { ArrowRight, Check, ChevronRight, Clock, FileText, Linkedin, Lock, Mail, Play, Twitter, Video, Youtube } from 'lucide-vue-next';
-import { computed, ref } from 'vue';
+import { ArrowRight, ChevronRight, Clock, FileText, Linkedin, Lock, Play, Twitter, Video, Youtube } from 'lucide-vue-next';
+
+import Faq from '@/components/landing/Faq.vue';
+import Pricing from '@/components/landing/Pricing.vue';
+import { Plan } from '@/types';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+
+defineProps<{
+    plan: Plan;
+    settings:object
+}>();
 // Add course features
 const courseFeatures = [
     {
@@ -29,72 +36,6 @@ const courseFeatures = [
     },
 ];
 
-const baseTeamPrice = 199;
-const pricePerSeat = 49;
-const teamSeats = ref(5);
-const seatOptions = [
-    { value: 5, label: '5 seats' },
-    { value: 10, label: '10 seats' },
-    { value: 20, label: '20 seats' },
-    { value: 50, label: '50 seats' },
-    { value: 'contact', label: 'Need more seats?' },
-];
-const calculatedTeamPrice = computed(() => {
-    if (teamSeats.value === 'contact') return null;
-    return baseTeamPrice + teamSeats.value * pricePerSeat;
-});
-
-const pricingPlans = [
-    {
-        name: 'Individual',
-        price: '$49',
-        description: 'Perfect for independent creators and instructors',
-        features: [
-            'Lifetime access to platform',
-            'Unlimited video hosting',
-            '4K video quality',
-            'Basic analytics',
-            'Course builder tools',
-            'Student management',
-            'Custom domain',
-        ],
-        cta: 'Buy Now',
-        popular: false,
-    },
-    {
-        name: 'Team',
-        description: 'For organizations and multiple instructors',
-        cta: 'Buy for Team',
-        popular: true,
-    },
-];
-
-const faqs = [
-    {
-        question: 'What video formats are supported?',
-        answer: 'We support all major video formats including MP4, MOV, AVI, and WMV. Our platform automatically optimizes your videos for the best viewing experience across all devices.',
-    },
-    {
-        question: 'How secure is my content?',
-        answer: 'Your content is protected with enterprise-grade security including DRM, encrypted storage, and customizable access controls. We also offer domain restrictions and watermarking features.',
-    },
-    {
-        question: 'Can I migrate my existing courses?',
-        answer: 'Yes! We offer free migration assistance for all your existing course content. Our team will help you transfer videos, course structure, and student data seamlessly.',
-    },
-    {
-        question: 'What payment methods do you accept?',
-        answer: 'We accept all major credit cards, PayPal, and bank transfers. For Enterprise plans, we also support purchase orders and custom billing arrangements.',
-    },
-    {
-        question: 'Do you offer a money-back guarantee?',
-        answer: "Yes, we offer a 30-day money-back guarantee for all paid plans. If you're not satisfied with our service, we'll refund your payment no questions asked.",
-    },
-    {
-        question: 'How do I get support if I need help?',
-        answer: 'We offer multiple support channels including 24/7 email support, live chat, and comprehensive documentation. Pro and Enterprise plans also get priority support and dedicated account managers.',
-    },
-];
 
 const curriculum = {
     title: 'Course Curriculum',
@@ -274,7 +215,7 @@ const instructor = {
         </section>
 
         <!-- Course Curriculum -->
-        <section class="border-border bg-background border-t py-20">
+        <section id="about" class="border-border bg-background border-t py-20">
             <div class="mx-auto max-w-[1280px] px-6">
                 <div class="mx-auto mb-16 max-w-[600px] text-center">
                     <div class="bg-primary/10 mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full">
@@ -363,111 +304,7 @@ const instructor = {
         </section>
 
         <!-- Pricing Section -->
-        <section class="border-border bg-background border-t py-20">
-            <div class="mx-auto max-w-5xl px-6">
-                <div class="mb-12 space-y-4 text-center">
-                    <h2 class="text-3xl font-semibold tracking-tight">Choose your plan</h2>
-                    <p class="text-muted-foreground">Simple, transparent pricing with no hidden fees</p>
-                </div>
-
-                <div class="mx-auto grid max-w-3xl grid-cols-1 gap-6 lg:grid-cols-2">
-                    <!-- Individual Plan -->
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>{{ pricingPlans[0].name }}</CardTitle>
-                            <CardDescription>{{ pricingPlans[0].description }}</CardDescription>
-                            <div class="mt-4 flex items-baseline">
-                                <span class="text-3xl font-bold">{{ pricingPlans[0].price }}</span>
-                                <span class="text-muted-foreground ml-1 text-sm">one-time</span>
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            <ul class="space-y-3 text-sm">
-                                <li v-for="feature in pricingPlans[0].features" :key="feature" class="text-muted-foreground flex items-center gap-3">
-                                    <Check class="text-primary h-4 w-4 flex-shrink-0" />
-                                    {{ feature }}
-                                </li>
-                            </ul>
-                        </CardContent>
-                        <CardFooter>
-                            <Button variant="outline" class="w-full">
-                                {{ pricingPlans[0].cta }}
-                                <ArrowRight class="ml-2 h-4 w-4" />
-                            </Button>
-                        </CardFooter>
-                    </Card>
-
-                    <!-- Team Plan -->
-                    <Card class="border-primary bg-primary/[0.03] relative">
-                        <CardHeader>
-                            <div class="flex items-center justify-between">
-                                <CardTitle>{{ pricingPlans[1].name }}</CardTitle>
-                                <Badge variant="secondary" class="bg-primary/10 text-primary hover:bg-primary/20"> Popular </Badge>
-                            </div>
-                            <CardDescription>{{ pricingPlans[1].description }}</CardDescription>
-                            <div class="mt-4 flex items-baseline">
-                                <span v-if="teamSeats !== 'contact'" class="text-3xl font-bold">${{ calculatedTeamPrice }}</span>
-                                <span v-else class="text-3xl font-bold">Custom</span>
-                                <span v-if="teamSeats !== 'contact'" class="text-muted-foreground ml-1 text-sm">one-time</span>
-                            </div>
-                        </CardHeader>
-                        <CardContent class="space-y-6">
-                            <div class="space-y-2">
-                                <label class="text-sm font-medium">Team size</label>
-                                <Select v-model="teamSeats">
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select team size" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem v-for="option in seatOptions" :key="option.value" :value="option.value">
-                                            {{ option.label }}
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-
-                            <Card v-if="teamSeats !== 'contact'" class="bg-card/50">
-                                <CardContent class="space-y-2 p-4">
-                                    <div class="flex justify-between text-sm">
-                                        <span class="text-muted-foreground">Base price</span>
-                                        <span>${{ baseTeamPrice }}</span>
-                                    </div>
-                                    <div class="flex justify-between text-sm">
-                                        <span class="text-muted-foreground">{{ teamSeats }} seats × ${{ pricePerSeat }}</span>
-                                        <span>${{ teamSeats * pricePerSeat }}</span>
-                                    </div>
-                                    <Separator class="my-2" />
-                                    <div class="flex justify-between font-medium">
-                                        <span>Total</span>
-                                        <span>${{ calculatedTeamPrice }}</span>
-                                    </div>
-                                </CardContent>
-                            </Card>
-
-                            <Card v-if="teamSeats === 'contact'" class="bg-card/50">
-                                <CardContent class="space-y-3 p-4 text-center">
-                                    <Mail class="text-primary mx-auto h-5 w-5" />
-                                    <div>
-                                        <p class="font-medium">Need more than 50 seats?</p>
-                                        <p class="text-muted-foreground text-xs">Contact sales for custom pricing</p>
-                                    </div>
-                                    <Button variant="default" size="sm" class="w-full" @click="window.location.href = 'mailto:sales@example.com'">
-                                        Contact Sales
-                                        <ArrowRight class="ml-2 h-4 w-4" />
-                                    </Button>
-                                </CardContent>
-                            </Card>
-                        </CardContent>
-                        <CardFooter>
-                            <Button v-if="teamSeats !== 'contact'" variant="default" class="w-full">
-                                {{ pricingPlans[1].cta }}
-                                <ArrowRight class="ml-2 h-4 w-4" />
-                            </Button>
-                        </CardFooter>
-                    </Card>
-                </div>
-            </div>
-        </section>
+        <Pricing :pricing="plan" />
         <!-- Testimonial -->
         <section class="border-border bg-background border-t py-20">
             <div class="mx-auto max-w-[800px] px-6">
@@ -492,39 +329,27 @@ const instructor = {
                     </div>
                 </div>
             </div>
+            <Carousel class="relative w-full max-w-xs">
+                <CarouselContent>
+                    <CarouselItem v-for="(_, index) in 5" :key="index">
+                        <div class="p-1">
+                            <Card>
+                                <CardContent class="flex aspect-square items-center justify-center p-6">
+                                    <span class="text-4xl font-semibold">{{ index + 1 }}</span>
+                                </CardContent>
+                            </Card>
+                        </div>
+                    </CarouselItem>
+                </CarouselContent>
+                <CarouselPrevious />
+                <CarouselNext />
+            </Carousel>
+
         </section>
 
         <!-- FAQ Section -->
-        <section class="border-border bg-background border-t py-20">
-            <div class="mx-auto max-w-[1280px] px-6">
-                <!-- Section Header -->
-                <div class="mx-auto mb-16 max-w-[600px] text-center">
-                    <div class="bg-primary/10 mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full">
-                        <span class="text-primary text-xl">❓</span>
-                    </div>
-                    <h2 class="text-foreground mb-4 text-3xl font-semibold">Frequently asked questions</h2>
-                    <p class="text-muted-foreground text-lg">Everything you need to know about the platform</p>
-                </div>
-
-                <!-- FAQ Grid -->
-                <div class="mx-auto max-w-3xl">
-                    <div class="grid gap-6">
-                        <div v-for="faq in faqs" :key="faq.question" class="bg-card rounded-xl border p-6 shadow-sm">
-                            <h3 class="text-foreground mb-2 text-lg font-semibold">{{ faq.question }}</h3>
-                            <p class="text-muted-foreground">{{ faq.answer }}</p>
-                        </div>
-                    </div>
-
-                    <!-- Support CTA -->
-                    <div class="mt-12 text-center">
-                        <p class="text-muted-foreground mb-4">Still have questions?</p>
-                        <Button variant="default" size="lg"> Contact Support</Button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
+        <Faq v-if="settings.landing.faq" :faqs="settings.landing.faq" :email="settings.general.socials.email"  />
         <!-- Footer -->
-        <Footer />
+        <Footer :socials="settings.general.socials" />
     </div>
 </template>

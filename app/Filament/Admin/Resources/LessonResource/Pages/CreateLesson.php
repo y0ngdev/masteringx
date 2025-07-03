@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources\LessonResource\Pages;
 
 use App\Filament\Admin\Resources\LessonResource;
 use App\Jobs\ConvertVideoForStreaming;
+use Exception;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
@@ -18,14 +19,14 @@ class CreateLesson extends CreateRecord
     protected function handleRecordCreation(array $data): Model
     {
         try {
-            $duration = FFMpeg::fromDisk('local')
+            $duration = FFMpeg::fromDisk( $data['disk'])
                 ->open($data['video'])
                 ->getDurationInSeconds();
 
-            if (!$duration || $duration === 'N/A') {
+            if (!$duration) {
                 $duration = $data['duration'] ?? 0;
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $duration = $data['duration'] ?? 0;
             Log::warning('Could not extract video duration: ' . $e->getMessage());
         }

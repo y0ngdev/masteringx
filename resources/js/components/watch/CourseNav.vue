@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Link } from '@inertiajs/vue3';
 import { useWindowScroll } from '@vueuse/core';
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
@@ -66,7 +67,9 @@ onBeforeUnmount(() => {
                 <div class="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
                     <div class="items-center space-x-6 text-sm">
                         <a :href="route('login')" class="text-muted-foreground hover:text-foreground font-medium transition-colors"> Sign in </a>
-                        <Button class="transition duration-300 hover:scale-105" size="sm" as="a" :href="route('buy')"> Buy Now </Button>
+                        <Button class="transition duration-300 hover:scale-105" size="sm">
+                            <Link :href="route('home')+'#pricing'"> Buy Now </Link>
+                        </Button>
                     </div>
                     <!--                    Todo: only show on mobile-->
                     <SidebarTrigger class="ml-2" />

@@ -1,22 +1,52 @@
 <script setup lang="ts">
-import { Github, Linkedin, Twitter } from 'lucide-vue-next';
+import { Linkedin, Mail, Twitter, Youtube } from 'lucide-vue-next';
+import { computed } from 'vue';
 
+const props = defineProps<{
+    socials: object;
+}>();
 const company = {
     name: 'Untitled UI',
     logo: 'U',
 };
 
-const socialLinks = [
-    { name: 'Twitter', href: '#', icon: Twitter },
-    { name: 'GitHub', href: '#', icon: Github },
-    { name: 'LinkedIn', href: '#', icon: Linkedin },
-];
 
-const legalLinks = [
-    { name: 'Terms', href: '#' },
-    { name: 'Privacy', href: '#' },
-    { name: 'Cookies', href: '#' },
-];
+
+const socialLinks = computed(() => {
+    const map = {
+        email: {
+            name: 'Email',
+            getHref: (v: string) => `mailto:${v}`,
+            icon: Mail,
+        },
+        twitter: {
+            name: 'Twitter',
+            getHref: (v: string) => `https://twitter.com/${v}`,
+            icon: Twitter,
+        },
+        linkedin: {
+            name: 'LinkedIn',
+            getHref: (v: string) => `https://linkedin.com/in/${v}`,
+            icon: Linkedin,
+        },
+        youtube: {
+            name: 'YouTube',
+            getHref: (v: string) =>
+                `https://youtube.com/${v.startsWith('@') ? v : '@' + v}`,
+            icon: Youtube,
+        },
+    };
+
+    return Object.entries(props.socials || {})
+        .filter(([key, val]) => map[key] && val)
+        .map(([key, val]) => ({
+            name: map[key].name,
+            href: map[key].getHref(val),
+            icon: map[key].icon,
+        }));
+
+});
+
 </script>
 
 <template>
@@ -41,13 +71,6 @@ const legalLinks = [
                     >
                         <span class="sr-only">{{ item.name }}</span>
                         <component :is="item.icon" class="h-4 w-4" />
-                    </a>
-                </div>
-
-                <!-- Legal Links -->
-                <div class="flex gap-4">
-                    <a v-for="link in legalLinks" :key="link.name" :href="link.href" class="text-muted-foreground hover:text-foreground text-xs">
-                        {{ link.name }}
                     </a>
                 </div>
             </div>
