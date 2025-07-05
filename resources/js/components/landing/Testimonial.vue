@@ -1,88 +1,48 @@
-
 <script lang="ts" setup>
-const reviews = [
-    {
-        review: "This library has made implementing our UI so much easier. It's intuitive and fast!",
-        rating: 5,
-        user: {
-            name: "James P.",
-            position: "Frontend Developer",
-            companyName: "TechLabs",
-        },
-    },
-    {
-        review:
-            "I was able to reduce development time by 40% thanks to the prebuilt components. Highly recommend!",
-        rating: 4,
-        user: {
-            name: "Sarah T.",
-            position: "UI/UX Designer",
-            companyName: "Design Studio",
-        },
-    },
-    {
-        review:
-            "Great library, but I think the documentation could use more examples for advanced use cases.",
-        rating: 3,
-        user: {
-            name: "Tom R.",
-            position: "Senior Software Engineer",
-            companyName: "CodeWorks",
-        },
-    },
-    {
-        review:
-            "A perfect tool for quick prototyping. The flexibility and performance are fantastic!",
-        rating: 5,
-        user: {
-            name: "Emily K.",
-            position: "Product Manager",
-            companyName: "Creative Solutions",
-        },
-    },
-    {
-        review:
-            "Good library overall. It could benefit from more integrations with other popular frameworks.",
-        rating: 4,
-        user: {
-            name: "Michael B.",
-            position: "Full Stack Developer",
-            companyName: "Innovative Tech",
-        },
-    },
-];
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import { getInitials } from '@/composables/useInitials';
+import Autoplay from 'embla-carousel-autoplay';
+
+defineProps<{
+    testimonials: object;
+}>();
+const plugin = Autoplay({
+    delay: 5000,
+    stopOnMouseEnter: true,
+    stopOnInteraction: false,
+});
 </script>
 
 <template>
-    <UiContainer class="py-10 lg:py-16">
-        <swiper-container grab-cursor loop :autoplay="{ delay: 7000 }" :speed="800">
-            <template v-for="(item, index) in reviews" :key="index">
-                <swiper-slide>
-                    <div class="py-10 text-center lg:py-16">
-                        <h3 class="mx-auto mb-8 max-w-[1024px] text-center text-3xl font-semibold lg:text-4xl">
-                            {{ item.review }}
-                        </h3>
-                        <div class="flex flex-col items-center justify-center">
-                            <UiAvatar
-                                class="size-16 ring-1"
-                                src="https://api.dicebear.com/7.x/lorelei/svg?flip=false"
-                            />
-                            <p class="mt-4 text-lg font-semibold">{{ item.user.name }}</p>
-                            <p class="mt-1 text-muted-foreground">
-                                {{ item.user.position }}, {{ item.user.companyName }}
-                            </p>
-                            <div class="mt-2">
-                                <template v-for="s in item.rating" :key="s">
-                                    <Icon
-                                        name="material-symbols:kid-star"
-                                        class="h-5 w-5 fill-yellow-400 text-yellow-400"
-                                    />
-                                </template>
-                            </div>
+    <Carousel class="mx-auto mb-4 max-w-[800px] max-h-fit  my-20" :plugins="[plugin]" @mouseenter="plugin.stop" @mouseleave="[plugin.reset(), plugin.play()]">
+        <CarouselContent>
+            <CarouselItem v-for="testimonial in testimonials" :key="testimonial.id">
+                <div class="flex flex-col items-center text-center">
+                    <blockquote class="text-foreground mb-8 text-2xl font-medium leading-[40px] tracking-[-0.02em]">
+                        {{ testimonial.content }}
+                    </blockquote>
+
+                    <div class="flex items-center gap-4">
+                        <Avatar class="h-14 w-14 rounded-full object-cover">
+                            <AvatarImage :src="testimonial.avatar" :alt="testimonial.name" />
+                            <AvatarFallback>{{ getInitials(testimonial.name) }}</AvatarFallback>
+                        </Avatar>
+                        <div class="text-left">
+                            <div class="font-semibold">{{ testimonial.name }}</div>
+                            <div class="text-muted-foreground">{{ testimonial.company }}</div>
                         </div>
                     </div>
-                </swiper-slide>
-            </template>
-        </swiper-container>
-    </UiContainer>
+                </div>
+            </CarouselItem>
+        </CarouselContent>
+        <!--        <CarouselPrevious />-->
+        <!--        <CarouselNext />-->
+    </Carousel>
+
+
+
+
 </template>
+
+

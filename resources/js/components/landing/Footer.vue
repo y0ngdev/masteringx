@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { Linkedin, Mail, Twitter, Youtube } from 'lucide-vue-next';
+import { Github, Linkedin, Mail, Twitter, Youtube } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 const props = defineProps<{
     socials: object;
 }>();
+// TODO
 const company = {
     name: 'Untitled UI',
     logo: 'U',
@@ -34,6 +35,11 @@ const socialLinks = computed(() => {
             getHref: (v: string) =>
                 `https://youtube.com/${v.startsWith('@') ? v : '@' + v}`,
             icon: Youtube,
+        },
+        github: {
+            name: 'GitHub',
+            getHref: (v: string) => `https://github.com/${v}`,
+            icon: Github, // Make sure you've imported the correct GitHub icon
         },
     };
 

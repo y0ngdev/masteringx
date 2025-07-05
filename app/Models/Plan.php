@@ -8,6 +8,7 @@ use Illuminate\Support\Number;
 
 class Plan extends Model
 {
+
     /**
      * The attributes that are not mass assignable.
      *

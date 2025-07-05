@@ -12,15 +12,14 @@ defineProps<{
     pricing: Plan;
 }>();
 
-const buyPlan = (planId) => {
+const buyPlan = (priceId) => {
     router.post(
-        route('buy'),
-        { plan_id: planId },
+        route('checkout'),
+        { priceId: priceId },
         {
-            preserveScroll: true,
-            onSuccess: () => {
-                // Optional: show a toast, modal, or redirect
-            },
+            fresh: true,
+
+
         },
     );
 };
@@ -60,10 +59,15 @@ const buyPlan = (planId) => {
                     </CardContent>
 
                     <CardFooter class="mt-6">
-                        <Button variant="default" class="group w-full"  @click="buyPlan(pricing.gateway_meta.stripe)">
-                            Buy Now
-                            <ArrowRight class="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                        </Button>
+                        <form method="POST" @submit="buyPlan" class="w-full">
+                            <input type="hidden" name="priceId" :value="pricing.gateway_meta.stripe" />
+
+                            <Button variant="default" class="group w-full" type="submit">
+                                Buy Now
+                                <ArrowRight class="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                            </Button>
+                        </form>
+
                     </CardFooter>
                 </Card>
             </div>

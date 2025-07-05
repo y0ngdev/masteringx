@@ -101,6 +101,7 @@ const opt = ref([tasklist, mark, abbr, sub, sup]);
                 <!-- Lesson info -->
                 <div class="mx-auto flex w-full flex-1 flex-col gap-6 border-t px-4 py-2.5 pb-48 md:px-6 md:pb-96 md:pt-4 lg:flex-row">
                     <!-- Sidebar Card (Buy Section) -->
+<!--                    Todo Hide on auth-->
                     <div class="w-full lg:order-2 lg:w-1/3">
                         <Card class="space-y-6 p-6">
                             <div>

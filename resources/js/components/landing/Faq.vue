@@ -11,9 +11,6 @@ defineProps<{
         <div class="mx-auto max-w-[1280px] px-6">
             <!-- Section Header -->
             <div class="mx-auto mb-16 max-w-[600px] text-center">
-                <div class="bg-primary/10 mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full">
-                    <span class="text-primary text-xl">❓</span>
-                </div>
                 <h2 class="text-foreground mb-4 text-3xl font-semibold">{{ faqs.title }}</h2>
                 <p class="text-muted-foreground text-lg">{{ faqs.description }}</p>
             </div>

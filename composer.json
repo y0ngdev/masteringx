@@ -7,7 +7,9 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "ext-fileinfo": "*",
         "filament/filament": "3.3",
+        "filament/spatie-laravel-tags-plugin": "^3.3",
         "inertiajs/inertia-laravel": "^2.0",
         "jackiedo/dotenv-editor": "^1.1",
         "laravel/cashier": "^15.7",
@@ -16,10 +18,10 @@
         "league/flysystem-aws-s3-v3": "3.0",
         "pbmedia/laravel-ffmpeg": "^8.7",
         "spatie/filament-markdown-editor": "^2.0",
+        "stripe/stripe-php": "^16.6",
         "tightenco/ziggy": "^2.4",
         "vimeo/laravel": "^5.10",
-        "webbingbrasil/filament-copyactions": "^3.0",
-        "ext-fileinfo": "*"
+        "webbingbrasil/filament-copyactions": "^3.0"
     },
     "require-dev": {
         "driftingly/rector-laravel": "^2.0",

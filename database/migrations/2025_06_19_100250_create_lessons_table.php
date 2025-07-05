@@ -26,6 +26,8 @@ return new class extends Migration {
             $table->foreignId('module_id')->constrained()->cascadeOnDelete();
 
             $table->unique(['module_id','position']);
+
+
             $table->timestamps();
         });
     }

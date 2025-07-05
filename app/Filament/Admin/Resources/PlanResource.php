@@ -45,6 +45,7 @@ class PlanResource extends Resource
                         Forms\Components\TagsInput::make('features')
                             ->reorderable()
                             ->separator(',')
+                            ->splitKeys(['Tab', ' '])
                             ->placeholder('New feature')
                             ->columnSpan([
                                 'default' => 2,

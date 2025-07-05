@@ -3,6 +3,9 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, PlayCircle } from 'lucide-vue-next';
 
 defineProps<{
+    title: string;
+    subtitle: string;
+    cta: string;
     landingImage: string;
 }>();
 </script>
@@ -13,22 +16,18 @@ defineProps<{
         <div class="pb-16 pt-32">
             <div class="mx-auto max-w-[1280px] px-6">
                 <div class="mx-auto mb-16 max-w-[800px] text-center">
-                    <div
-                        class="bg-primary/10 text-primary mb-2 inline-flex rounded px-3 py-1 text-xs font-semibold uppercase tracking-wider md:text-sm"
-                    >
-                        Built for Instructors
-                    </div>
                     <h1 class="text-foreground mb-6 text-4xl font-bold leading-tight tracking-[-0.02em] sm:text-5xl lg:text-[56px] lg:leading-[64px]">
-                        Teach. Inspire. We'll Handle the Tech.
+                        {{ title }}
                     </h1>
-                    <p class="text-muted-foreground mx-auto mb-8 max-w-[600px] text-lg sm:text-xl">
-                        Upload your lessons and reach your students—no hosting headaches, no distractions. Focus on what you do best: teaching.
-                    </p>
+                    <p class="text-muted-foreground mx-auto mb-8 max-w-[600px] text-lg sm:text-xl">{{ subtitle }}}</p>
                     <div class="flex flex-col items-center justify-center gap-3 sm:flex-row">
-                        <Button size="lg" class="min-w-[160px] gap-2">
-                            <ArrowRight class="h-5 w-5" />
-                            Buy Now
-                        </Button>
+                        <a href="#pricing">
+                            <Button size="lg" class="min-w-[160px] gap-2">
+                                <ArrowRight class="h-5 w-5" />
+                                {{ cta }}
+                            </Button>
+                        </a>
+
                         <Button variant="outline" size="lg" class="min-w-[160px] gap-2">
                             <PlayCircle class="h-5 w-5" />
                             Watch demo
@@ -43,7 +42,7 @@ defineProps<{
                         <img
                             :src="landingImage"
                             alt="Course Platform Preview"
-                            class="h-full w-full transform object-contain transition-transform duration-500 hover:scale-[1.02]"
+                            class="h-full w-full transform object-cover transition-transform duration-500 hover:scale-[1.02]"
                             loading="eager"
                         />
                     </div>

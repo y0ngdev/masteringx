@@ -95,7 +95,7 @@ class Settings extends Page
                                 Forms\Components\TextInput::make('general.socials.youtube')
                                     ->label('Youtube Handle'),
 
-                                Forms\Components\TextInput::make('general..socials.github')
+                                Forms\Components\TextInput::make('general.socials.github')
                                     ->label('Github Handle'),
 
                             ]),
@@ -104,32 +104,86 @@ class Settings extends Page
                             ->schema([
                                 Forms\Components\TextInput::make('landing.hero_title')
                                     ->label('Hero Title')
-//                                    ->required()
+                                    ->required()
                                 ,
                                 Forms\Components\TextInput::make('landing.hero_subtitle')
                                     ->label('Hero Subtitle')
-//                                    ->required()
+                                    ->required()
                                 ,
                                 Forms\Components\TextInput::make('landing.hero_cta_text')
                                     ->label('Hero CTA Text')
-//                                    ->required()
+                                    ->required()
                                 ,
-                                Forms\Components\Repeater::make('landing.features')
+                                Forms\Components\FileUpload::make('landing.hero_image')
+                                    ->label("Hero's Image")
+                                    ->image()
+                                    ->required()
+                                    ->directory('site'),
+
+                                Forms\Components\TextInput::make('landing.features.section.title')
+                                    ->label('Feature Section Title')
+                                    ->required()
+                                ,
+                                Forms\Components\TextInput::make('landing.features.section.subtitle')
+                                    ->label('Feature Section Subtitle')
+                                    ->required()
+                                ,
+                                Forms\Components\Repeater::make('landing.features.items')
+                                    ->label('Feature items')
+                                    ->required()
                                     ->schema([
-                                        Forms\Components\TextInput::make('landing.features.title')
-//                                            ->required()
+                                        Forms\Components\TextInput::make('title')
+
+
                                         ,
-                                        Forms\Components\TextInput::make('landing.features.description')
-//                                            ->required()
+                                        Forms\Components\TextInput::make('description')
+
+
                                         ,
-                                        Forms\Components\TextInput::make('landing.features.icon')
-                                            ->hint(' visit for how to use https://icon-sets.iconify.design/')
-//                                            ->required()
+                                        Forms\Components\TextInput::make('icon')
+                                            ->hint(' visit https://icon-sets.iconify.design/')
+
+
                                         ,
                                     ])
-                                    ->columns(3)
-                                    ->defaultItems(3)
-                                    ->reorderable(),
+
+                                    ->defaultItems(0)
+                                    ->columns(3),
+
+                                Forms\Components\TextInput::make('landing.instructor.section.title')
+                                    ->label("Instructor's Section Title")
+                                    ->required(),
+                                Forms\Components\TextInput::make('landing.instructor.name')
+                                    ->label("Instructor's Name")
+                                    ->required(),
+
+                                Forms\Components\TextInput::make('landing.instructor.title')
+                                    ->label("Instructor's  Title")
+                                    ->required(),
+                                Forms\Components\TextInput::make('landing.instructor.about')
+                                    ->label("Instructor's About")
+                                    ->required(),
+
+                                Forms\Components\TextInput::make('landing.instructor.socials.twitter')
+                                    ->label("Instructor's Twitter Handle"),
+                                Forms\Components\TextInput::make('landing.instructor.socials.linkedin')
+                                    ->label("Instructor's LinkedIn Handle"),
+                                Forms\Components\TextInput::make('landing.instructor.socials.youtube')
+                                    ->label("Instructor's Youtube Handle"),
+
+                                Forms\Components\TextInput::make('landing.instructor.socials.github')
+                                    ->label("Instructor's Github Handle"),
+
+                                 Forms\Components\TextInput::make('landing.instructor.socials.website')
+                                    ->label("Instructor's Website"),
+                                Forms\Components\FileUpload::make('landing.instructor.image')
+                                    ->label("Instructor's Image")
+                                    ->image()
+                                    ->directory('site'),
+
+
+
+
                                 Forms\Components\TextInput::make('landing.faq.title')
                                     ->label('FAQ Title')
                                     ->required(),

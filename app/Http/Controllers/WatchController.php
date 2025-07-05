@@ -19,9 +19,11 @@ class WatchController extends Controller
             ->orderBy('order')
             ->firstOrFail();
 
-        $lessons = $module?->lessons
+
+        $lessons = Lesson::where('module_id', $module->id)
             ->where('is_published', true)
-            ->where('status', 'READY');
+            ->where('status', 'READY')
+            ->get();
 
         $user = Auth::user();
 
