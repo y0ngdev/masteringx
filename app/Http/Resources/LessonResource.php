@@ -12,15 +12,18 @@ class LessonResource extends JsonResource
      *
      * @return array<string, mixed>
      */
+    public static $wrap = null;
     public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'url' => $this->video_url,
+            'slug' => $this->slug,
+            'streamURL' => $this->stream_url,
+            'moduleID' => $this->module_id,
             'description' => $this->description,
             'duration' => $this->duration,
-            'canWatch' => !$this->canWatch($request->user()),
+            'canWatch' => $this->canWatch($request->user()),
         ];
     }
 }

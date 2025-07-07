@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
-import { Menu, X, ShoppingCart } from 'lucide-vue-next';
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
-import { useWindowScroll } from '@vueuse/core';
 import { Link } from '@inertiajs/vue3';
+import { useWindowScroll } from '@vueuse/core';
+import { Menu, ShoppingCart, X } from 'lucide-vue-next';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
 const isOpen = ref(false);
 const isScrolled = ref(false);
@@ -40,16 +40,16 @@ onBeforeUnmount(() => {
 });
 
 const navigation = [
-    { name: 'About', href: '#about' },
-    { name: 'Pricing', href: '#pricing' },
     { name: 'Articles', href: route('articles') },
-    // { name: 'Watch', href: route('watch') },
+    { name: 'Watch', href: route('dashboard') },
 ];
+
+const isHome = computed(() => window.location.pathname === '/');
 </script>
 
 <template>
     <header
-        class="fixed z-50 flex h-16 w-full items-center bg-background/80 backdrop-blur-sm transition-all duration-300 "
+        class="bg-background/80 fixed z-50 flex h-16 w-full items-center backdrop-blur-sm transition-all duration-300"
         :class="{ 'border-b': isScrolled }"
     >
         <div class="container mx-auto px-4 md:px-6 lg:px-14">
@@ -71,12 +71,26 @@ const navigation = [
                     </div>
 
                     <!-- Desktop Navigation -->
-                    <div class="hidden items-center space-x-6 md:flex text-sm">
+                    <div class="hidden items-center space-x-6 text-sm md:flex">
+                        <div class="space-x-6" v-if="isHome">
+                            <a
+                                href="/#about"
+                                class="text-muted-foreground hover:text-foreground after:bg-primary relative font-medium transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:transition-all after:duration-300 hover:after:w-full"
+                            >
+                                About</a
+                            >
+                            <a
+                                href="/#pricing"
+                                class="text-muted-foreground hover:text-foreground after:bg-primary relative font-medium transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:transition-all after:duration-300 hover:after:w-full"
+                            >
+                                Pricing</a
+                            >
+                        </div>
                         <Link
                             v-for="item in navigation"
                             :key="item.name"
                             :href="item.href"
-                            class="relative font-medium text-muted-foreground transition-colors hover:text-foreground after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full"
+                            class="text-muted-foreground hover:text-foreground after:bg-primary relative font-medium transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:transition-all after:duration-300 hover:after:w-full"
                         >
                             {{ item.name }}
                         </Link>
@@ -84,27 +98,20 @@ const navigation = [
                 </div>
 
                 <!-- Desktop Navigation -->
-                <div class="hidden items-center space-x-6 md:flex text-sm">
-                    <a
-                        :href="route('login')"
-                        class="font-medium text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                        Sign in
-                    </a>
-                    <Button class="transition duration-300 hover:scale-105" as="a" :href="route('buy')">
-                        <ShoppingCart class="mr-2 h-4 w-4" />
-                        Buy Now
-                    </Button>
+                <div class="hidden items-center space-x-6 text-sm md:flex">
+                    <a :href="route('login')" class="text-muted-foreground hover:text-foreground font-medium transition-colors"> Sign in </a>
+
+                    <Link :href="route('homepage') + '#pricing'">
+                        <Button class="transition duration-300 hover:scale-105" size="sm">
+                            <ShoppingCart class="mr-2 h-4 w-4" />
+                            Buy Now
+                        </Button>
+                    </Link>
                 </div>
 
                 <!-- Mobile Navigation Button -->
                 <div class="md:hidden">
-                    <Button
-                        variant="ghost"
-                        @click="isOpen = !isOpen"
-                        class="transition-transform duration-200"
-                        :class="{ 'rotate-180': isOpen }"
-                    >
+                    <Button variant="ghost" @click="isOpen = !isOpen" class="transition-transform duration-200" :class="{ 'rotate-180': isOpen }">
                         <Menu v-if="!isOpen" class="h-6 w-6" />
                         <X v-else class="h-6 w-6" />
                     </Button>
@@ -119,35 +126,37 @@ const navigation = [
                     leave-from-class="transform translate-y-0 opacity-100"
                     leave-to-class="transform -translate-y-4 opacity-0"
                 >
-                    <div
-                        v-if="isOpen"
-                        class="absolute top-full left-0 w-full border-b bg-background/80 py-4 backdrop-blur-sm md:hidden"
-                    >
+                    <div v-if="isOpen" class="bg-background/80 absolute left-0 top-full w-full border-b py-4 backdrop-blur-sm md:hidden">
                         <div class="container mx-auto px-4">
                             <div class="flex flex-col space-y-4">
                                 <a
                                     v-for="item in navigation"
                                     :key="item.name"
                                     :href="item.href"
-                                    class="transform text-muted-foreground transition-all duration-200 hover:translate-x-2 hover:text-foreground"
+                                    class="text-muted-foreground hover:text-foreground transform transition-all duration-200 hover:translate-x-2"
                                     @click="isOpen = false"
                                 >
                                     {{ item.name }}
                                 </a>
                                 <a
-                                    href="/signin"
-                                    class="transform text-muted-foreground transition-all duration-200 hover:translate-x-2 hover:text-foreground"
+                                    :href="route('login')"
+                                    class="text-muted-foreground hover:text-foreground transform transition-all duration-200 hover:translate-x-2"
                                     @click="isOpen = false"
                                 >
                                     Sign in
                                 </a>
-                                <Button
-                                    class="w-full transform transition-all duration-200 hover:scale-[1.02]" as="a" :href="route('buy')"
-                                    @click="isOpen = false"
-                                >
-                                    <ShoppingCart class="mr-2 h-4 w-4" />
-                                    Buy Now
-                                </Button>
+
+                                <Link :href="route('homepage') + '#pricing'">
+                                    <Button
+                                        class="w-full transform transition-all duration-200 hover:scale-[1.02]"
+                                        as="a"
+                                        :href="route('buy')"
+                                        @click="isOpen = false"
+                                    >
+                                        <ShoppingCart class="mr-2 h-4 w-4" />
+                                        Buy Now
+                                    </Button>
+                                </Link>
 
 
                             </div>

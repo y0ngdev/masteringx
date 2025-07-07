@@ -59,8 +59,8 @@ class ModuleResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'published' => 'success',
-                        'draft' => 'warning',
+                        'PUBLISHED' => 'success',
+                        'DRAFT' => 'warning',
                     }),
                 Tables\Columns\TextColumn::make('lessons_count')
                     ->counts('lessons')
@@ -69,8 +69,8 @@ class ModuleResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->options([
-                        'draft' => 'Draft',
-                        'published' => 'Published',
+                        'DRAFT' => 'Draft',
+                        'PUBLISHED' => 'Published',
                     ]),
             ])
             ->actions([

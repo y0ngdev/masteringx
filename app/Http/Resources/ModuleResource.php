@@ -27,7 +27,7 @@ class ModuleResource extends ResourceCollection
                     return [
                         'id' => $lesson->id,
                         'title' => $lesson->title,
-                        'url' => $lesson->video_url,
+                        'url' => route('watch.lesson',$lesson->slug),
                         'canWatch' => $lesson->canWatch($request->user()),
                     ];
                 }),

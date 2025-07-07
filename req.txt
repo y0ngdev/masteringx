@@ -10,3 +10,4 @@ max_input_time = 3600
 
 Videos shoud have meta data
 
+ext-fileinfo

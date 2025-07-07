@@ -6,7 +6,7 @@ import autoprefixer from 'autoprefixer';
 export default defineConfig({
     plugins: [
         laravel({
-            input: [],
+            input: ['resources/css/filament/admin/theme.css'],
             refresh: true,
         }),
     ],

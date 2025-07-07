@@ -10,37 +10,24 @@ import {
     SidebarMenuSub,
     SidebarMenuSubButton,
     SidebarMenuSubItem,
-    SidebarRail
 } from '@/components/ui/sidebar';
-import { Course, Lesson, Module } from '@/types/course';
-import { ChevronDown, ChevronUp, Lock } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { Lesson, Module } from '@/types/course';
+import { Link } from '@inertiajs/vue3';
+import { ChevronDown, ChevronUp, Circle, Lock } from 'lucide-vue-next';
+import { User } from '@/types';
 
 interface Props {
-    course: Course;
+    lesson: Lesson;
     modules: Module;
-    currentLesson?: Lesson | null;
+
 }
 
 const props = defineProps<Props>();
 
-const emit = defineEmits<{
-    selectLesson: [lesson: Lesson];
-}>();
-
-const expandedmodules = ref<Set<string>>(new Set(['module-1', 'module-2', 'module-3']));
-
-const togglemodule = (moduleId: string) => {
-    if (expandedmodules.value.has(moduleId)) {
-        expandedmodules.value.delete(moduleId);
-    } else {
-        expandedmodules.value.add(moduleId);
+const isActive = (id) => {
+    if (id == props.lesson.id) {
+        return true;
     }
-};
-
-
-const isActive = (lesson) => {
-
 };
 </script>
 
@@ -49,9 +36,7 @@ const isActive = (lesson) => {
         <SidebarContent class="mt-4 text-sm font-light">
             <SidebarGroup>
                 <SidebarMenu>
-                    <!--                   Todo: this is here the where the collapsible default open is configured -->
-                    <Collapsible v-for="(item, index) in modules" :key="item.id" :default-open="index === 0"
-                                 class="group/collapsible">
+                    <Collapsible v-for="item in modules" :key="item.id" :default-open="item.id === lesson.moduleID" class="group/collapsible">
                         <SidebarMenuItem>
                             <CollapsibleTrigger as-child>
                                 <SidebarMenuButton size="sm" :tooltip="item.title" class="truncate text-zinc-300">
@@ -67,27 +52,24 @@ const isActive = (lesson) => {
                                         v-for="lesson in item.lessons"
                                         :key="lesson.title"
                                         class="border-l-1 -ml-[0.690rem] mb-4 cursor-pointer"
-                                        :class="{ 'border-zinc-200': lesson.isActive, '': lesson.completed }"
+                                        :class="{ 'border-zinc-200': isActive(lesson.id), '': lesson.completed }"
                                     >
                                         <SidebarMenuSubButton
                                             size="sm"
                                             as-child
-                                            :is-active="lesson.isActive"
+                                            :is-active="isActive(lesson.id)"
                                             class="min truncate py-2.5 font-medium text-zinc-600"
                                         >
-                                            <a :href="lesson.url" class="flex w-full items-center justify-between py-2">
+                                            <Link :href="lesson.url" class="flex w-full items-center justify-between py-2">
                                                 <div class="flex min-w-0 flex-1 items-center gap-3">
                                                     <span class="truncate">{{ lesson.title }}</span>
                                                 </div>
-                                                <div
-                                                    class="text-muted-foreground ml-2 flex flex-shrink-0 items-center gap-1 text-xs">
-                                                    <!--                                                    <CheckCircle class="h-2 w-2 text-green-600" />-->
-                                                    <Lock class="h-2 w-2" />
-                                                    <!--                                              TODO:      CircleSmall-->
-                                                    <!--                                                    Dot-->
-                                                    <!--                                                    v-if="lesson.completed"-->
+                                                <div class="text-muted-foreground ml-2 flex flex-shrink-0 items-center gap-1 text-xs">
+                                                    <Circle class="h-2 w-2 object-fill" v-if="lesson.canWatch" />
+
+                                                    <Lock class="h-2 w-2" v-else />
                                                 </div>
-                                            </a>
+                                            </Link>
                                         </SidebarMenuSubButton>
                                     </SidebarMenuSubItem>
                                 </SidebarMenuSub>
@@ -97,6 +79,5 @@ const isActive = (lesson) => {
                 </SidebarMenu>
             </SidebarGroup>
         </SidebarContent>
-        <SidebarRail />
     </Sidebar>
 </template>

@@ -45,6 +45,7 @@ class PlanResource extends Resource
                         Forms\Components\TagsInput::make('features')
                             ->reorderable()
                             ->separator(',')
+                            ->splitKeys(['Tab', ' '])
                             ->placeholder('New feature')
                             ->columnSpan([
                                 'default' => 2,
@@ -118,7 +119,7 @@ class PlanResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+//                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -129,12 +130,15 @@ class PlanResource extends Resource
             //
         ];
     }
-
+    public static function canCreate(): bool
+    {
+        return false;
+    }
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListPlans::route('/'),
-            'create' => Pages\CreatePlan::route('/create'),
+//            'create' => Pages\CreatePlan::route('/create'),
             'edit' => Pages\EditPlan::route('/{record}/edit'),
         ];
     }

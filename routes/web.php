@@ -1,22 +1,17 @@
 <?php
 
-use App\Http\Resources\ModuleResource;
+use App\Http\Controllers\IndexController;
+use App\Http\Controllers\StreamController;
+use App\Http\Controllers\WatchController;
 use App\Models\Article;
-use App\Models\Lesson;
-use App\Models\Module;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome');
-})->name('home');
-Route::get('/', function () {
-    return Inertia::render('Welcome');
-})->name('buy');
+Route::get('/', [IndexController::class, 'index'])->middleware('guest')->name('homepage');
 
-Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::post('/buy', [IndexController::class, 'buy'])->name('buy');
+Route::get('/stripe/webhook', [IndexController::class, 'success'])->name('buy.success');
+
 
 Route::get('articles/', function () {
     return Inertia::render('Article/Index', [
@@ -50,45 +45,11 @@ Route::get('article/{slug}', function () {
     ]);
 })->name('articles.show');
 
-Route::get('watch', function () {
+Route::get('watch', [WatchController::class, 'index'])->name('dashboard');
 
-    $module = Module::published()
-        ->orderBy('order')
-        ->firstOrFail();
-    $query = $module?->lessons->
-    where('is_published', true)
-        ->where('status', 'ready');
+Route::get('watch/{slug}', [WatchController::class, 'handle'])->name('watch.lesson');
 
-    $user = Auth::user();
-
-    if (!$user || !$user->subscribed()) {
-        $query->where('can_preview', true);
-    }
-
-    $lesson = $query->first();
-    if (!$lesson) {
-        return redirect()->route('home');
-    }
-
-    return redirect()->route('watch.lesson', $lesson->slug);
-})->name('watch');
-
-
-Route::get('watch/{slug}', function () {
-
-
-    $modules = Module::published()->with('lessons')
-        ->orderBy('order')
-        ->get();
-
-
-    return Inertia::render('Watch/Show', [
-        'lesson' => Lesson::where('slug', request()->route('slug'))->firstOrFail(),
-        'modules' => new ModuleResource($modules),
-
-    ]);
-})->name('watch.lesson');
-
+Route::get('/stream/{path}', [StreamController::class, 'handle'])->where('path', '.*')->name('watch.stream');
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

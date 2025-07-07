@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Testimonial extends Model
@@ -14,4 +16,17 @@ class Testimonial extends Model
     protected $guarded = [
         'id',
     ];
+
+
+    /**
+     * Scope the query to only include published testimonial.
+     */
+    #[Scope]
+    protected function published(Builder $query): void
+    {
+
+        $query->withAttributes([
+            'status' => 'PUBLISHED',
+        ]);
+    }
 }

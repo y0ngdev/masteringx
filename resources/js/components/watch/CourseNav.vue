@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Link } from '@inertiajs/vue3';
 import { useWindowScroll } from '@vueuse/core';
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { User } from '@/types';
+import NavUser from '@/components/NavUser.vue';
 
 const isOpen = ref(false);
 const isScrolled = ref(false);
@@ -38,20 +41,17 @@ onBeforeUnmount(() => {
     window.removeEventListener('resize', handleResize);
 });
 
-const navigation = [
-    { name: 'About', href: '#about' },
-    { name: 'Pricing', href: '#pricing' },
-    { name: 'Articles', href: route('articles') }
-    // { name: 'Watch', href: route('watch') },
-];
+const props = defineProps<{
+    auth: User;
+}>();
 </script>
 
 <template>
     <header
-        class="bg-background/80 fixed z-50 flex h-16 w-full shrink-0 items-center border-[0.1px] backdrop-blur-sm transition-all duration-300"
+        class="bg-background/80 fixed z-50 flex h-16 w-full shrink-0 items-center border-[0.1px] border-b transition-all duration-300"
         :class="{ 'border-b': isScrolled }"
     >
-        <div class="container mx-auto px-4 ">
+        <div class="container mx-auto px-4">
             <nav class="flex items-center justify-between">
                 <div class="flex items-center">
                     <div class="flex items-center">
@@ -64,23 +64,22 @@ const navigation = [
                             <div
                                 class="hidden whitespace-nowrap text-base font-semibold tracking-tight text-zinc-800 sm:block md:text-[17px] dark:text-zinc-100"
                             >
+<!--                                todo dynamic-->
                                 Mastering X
                             </div>
                         </a>
                     </div>
                 </div>
 
-
                 <div class="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
-                    <div class="items-center space-x-6 text-sm">
-                        <a :href="route('login')"
-                           class="text-muted-foreground hover:text-foreground font-medium transition-colors"> Sign
-                            in </a>
-                        <Button class="transition duration-300 hover:scale-105" size="sm" as="a" :href="route('buy')">
-                            Buy Now
+                    <NavUser v-if="props.auth"/>
+                    <div class="items-center space-x-6 text-sm" v-else>
+                        <a :href="route('login')" class="text-muted-foreground hover:text-foreground font-medium transition-colors"> Sign in </a>
+                        <Button class="transition duration-300 hover:scale-105" size="sm">
+                            <Link :href="route('homepage')+'#pricing'"> Buy Now </Link>
                         </Button>
                     </div>
-<!--                    Todo: only show on mobile-->
+                    <!--                    Todo: only show on mobile-->
                     <SidebarTrigger class="ml-2" />
                 </div>
             </nav>

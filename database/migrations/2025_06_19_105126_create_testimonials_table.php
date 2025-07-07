@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('content');
             $table->string('avatar')->nullable();
             $table->integer('order')->default(0);
-            $table->enum('status', ['draft', 'published'])->default('draft');
+            $table->enum('status', ['DRAFT', 'PUBLISHED'])->default('DRAFT');
             $table->timestamps();
         });
     }

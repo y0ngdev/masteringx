@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Footer from '@/components/landing/Footer.vue';
 import Navbar from '@/components/landing/Navbar.vue';
-import { Link, usePage } from '@inertiajs/vue3';
+import { Head, Link, usePage } from '@inertiajs/vue3';
 import { Search as SearchIcon } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
@@ -36,6 +36,7 @@ function formatDate(dateStr: string): string {
 }
 </script>
 <template>
+    <Head title="Articles" />
     <div class="bg-background min-h-screen">
         <!-- Header -->
         <Navbar />

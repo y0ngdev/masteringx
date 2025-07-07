@@ -2,7 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Foundation\Inspiring;
+use App\Services\SettingsManager;
+use Arr;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
@@ -37,12 +38,12 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
 
+        $settings = new SettingsManager;
         return [
             ...parent::share($request),
             'name' => config('app.name'),
-            'quote' => ['message' => trim((string) $message), 'author' => trim((string) $author)],
+            'settings' =>  Arr::undot($settings->all()),
             'auth' => [
                 'user' => $request->user(),
             ],
@@ -50,7 +51,12 @@ class HandleInertiaRequests extends Middleware
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
-            'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'sidebarOpen' => !$request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'flash' => [
+                'message' => fn () => $request->session()->get('message'),
+                'type' => fn () => $request->session()->get('type', 'default'),
+                'description' => fn () => $request->session()->get('description'),
+            ],
         ];
     }
 }
