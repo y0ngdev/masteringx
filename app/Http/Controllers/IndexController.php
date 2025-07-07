@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Plan;
 use App\Models\Testimonial;
+use App\Models\User;
+use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 use Stripe\Checkout\Session;
+use Stripe\Exception\ApiErrorException;
 use Stripe\Stripe;
 
 class IndexController extends Controller
@@ -16,17 +21,21 @@ class IndexController extends Controller
     {
 //        dd( Plan::first());
         return Inertia::render('Welcome', [
+            'csrf_token' => csrf_token(),
             'plan' => Plan::first(),
             'testimonials' => Testimonial::published()->orderBy('order')->get()->all(),
         ]);
     }
 
+    /**
+     * @throws ApiErrorException
+     */
     public function buy(Request $request)
     {
         Stripe::setApiKey(config('payments.drivers.stripe.secret_key'));
 
         $priceId = $request->input('priceId');
-
+//        dd($priceId);
 
         $session = Session::create([
             'payment_method_types' => ['card'],
@@ -35,9 +44,54 @@ class IndexController extends Controller
                 'quantity' => 1,
             ]],
             'mode' => 'payment',
-            'success_url' => route('buy.success'),
-//            'cancel_url' =>route('home'),
+            'success_url' => route('buy.success') . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => route('homepage'),
         ]);
 
+        return redirect($session->url);
+
+    }
+
+    /**
+     * @throws ApiErrorException
+     */
+    public function success(Request $request)
+    {
+
+        $sessionId = $request->get('session_id');
+
+        if (!$sessionId) {
+            abort(400, 'Session ID missing');
+        }
+
+        Stripe::setApiKey(config('payments.drivers.stripe.secret_key'));
+
+        $session = Session::retrieve($sessionId);
+
+
+        if ($session->payment_status !== 'paid') {
+            abort(400, 'Payment not completed');
+        }
+
+        // Get email and other info from session
+        $email = $session->customer_details->email ?? null;
+        $name = $session->customer_details->name ?? 'New User';
+
+        // Register user (or log them in)
+        $user = User::firstOrCreate(
+            ['email' => $email],
+            ['name' => $name, 'password' => bcrypt(Str::random(16))] // Or send them a password setup link
+        );
+
+        Auth::login($user);
+//Todo log transaction
+        Password::sendResetLink(
+            $request->only('email')
+        );
+
+        return redirect(route('dashboard'))->with('toast', [
+            'type' => 'success',
+            'message' => 'Welcome! A link to reset your password has been sent',
+        ]);
     }
 }

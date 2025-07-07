@@ -3,21 +3,15 @@
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\StreamController;
 use App\Http\Controllers\WatchController;
-use App\Http\Resources\ModuleResource;
 use App\Models\Article;
-use App\Models\Lesson;
-use App\Models\Module;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/',[IndexController::class,'index'])->name('home');
+Route::get('/', [IndexController::class, 'index'])->middleware('guest')->name('homepage');
 
-Route::post('/buy',[IndexController::class,'buy'])->name('checkout');
-Route::post('/stripe/webhook',[IndexController::class,'sucess'])->name('buy.success');
+Route::post('/buy', [IndexController::class, 'buy'])->name('buy');
+Route::get('/stripe/webhook', [IndexController::class, 'success'])->name('buy.success');
 
-Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('articles/', function () {
     return Inertia::render('Article/Index', [
@@ -51,9 +45,9 @@ Route::get('article/{slug}', function () {
     ]);
 })->name('articles.show');
 
-Route::get('watch', [WatchController::class,'index'])->name('watch');
+Route::get('watch', [WatchController::class, 'index'])->name('dashboard');
 
-Route::get('watch/{slug}',[WatchController::class,'handle'])->name('watch.lesson');
+Route::get('watch/{slug}', [WatchController::class, 'handle'])->name('watch.lesson');
 
 Route::get('/stream/{path}', [StreamController::class, 'handle'])->where('path', '.*')->name('watch.stream');
 

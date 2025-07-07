@@ -14,17 +14,15 @@ import {
 import { Lesson, Module } from '@/types/course';
 import { Link } from '@inertiajs/vue3';
 import { ChevronDown, ChevronUp, Circle, Lock } from 'lucide-vue-next';
+import { User } from '@/types';
 
 interface Props {
     lesson: Lesson;
     modules: Module;
+
 }
 
 const props = defineProps<Props>();
-
-const emit = defineEmits<{
-    selectLesson: [lesson: Lesson];
-}>();
 
 const isActive = (id) => {
     if (id == props.lesson.id) {
@@ -38,7 +36,6 @@ const isActive = (id) => {
         <SidebarContent class="mt-4 text-sm font-light">
             <SidebarGroup>
                 <SidebarMenu>
-                    <!--                   Todo: this is here the where the collapsible default open is configured -->
                     <Collapsible v-for="item in modules" :key="item.id" :default-open="item.id === lesson.moduleID" class="group/collapsible">
                         <SidebarMenuItem>
                             <CollapsibleTrigger as-child>

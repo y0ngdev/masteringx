@@ -41,7 +41,7 @@ onBeforeUnmount(() => {
 
 const navigation = [
     { name: 'Articles', href: route('articles') },
-    { name: 'Watch', href: route('watch') },
+    { name: 'Watch', href: route('dashboard') },
 ];
 
 const isHome = computed(() => window.location.pathname === '/');
@@ -101,7 +101,7 @@ const isHome = computed(() => window.location.pathname === '/');
                 <div class="hidden items-center space-x-6 text-sm md:flex">
                     <a :href="route('login')" class="text-muted-foreground hover:text-foreground font-medium transition-colors"> Sign in </a>
 
-                    <Link :href="route('home') + '#pricing'">
+                    <Link :href="route('homepage') + '#pricing'">
                         <Button class="transition duration-300 hover:scale-105" size="sm">
                             <ShoppingCart class="mr-2 h-4 w-4" />
                             Buy Now
@@ -139,21 +139,26 @@ const isHome = computed(() => window.location.pathname === '/');
                                     {{ item.name }}
                                 </a>
                                 <a
-                                    href="/signin"
+                                    :href="route('login')"
                                     class="text-muted-foreground hover:text-foreground transform transition-all duration-200 hover:translate-x-2"
                                     @click="isOpen = false"
                                 >
                                     Sign in
                                 </a>
-                                <Button
-                                    class="w-full transform transition-all duration-200 hover:scale-[1.02]"
-                                    as="a"
-                                    :href="route('buy')"
-                                    @click="isOpen = false"
-                                >
-                                    <ShoppingCart class="mr-2 h-4 w-4" />
-                                    Buy Now
-                                </Button>
+
+                                <Link :href="route('homepage') + '#pricing'">
+                                    <Button
+                                        class="w-full transform transition-all duration-200 hover:scale-[1.02]"
+                                        as="a"
+                                        :href="route('buy')"
+                                        @click="isOpen = false"
+                                    >
+                                        <ShoppingCart class="mr-2 h-4 w-4" />
+                                        Buy Now
+                                    </Button>
+                                </Link>
+
+
                             </div>
                         </div>
                     </div>

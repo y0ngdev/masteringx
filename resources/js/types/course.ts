@@ -15,15 +15,4 @@ export type Module = {
     lessons: Lesson[];
 };
 
-export type Course = {
-    id: string;
-    title: string;
-    instructor: string;
-    description: string;
-    thumbnail: string;
-    totalDuration: string;
-    totalLessons: number;
-    completedLessons: number;
-    modules: Module[];
-    currentLesson?: Lesson;
-};
+

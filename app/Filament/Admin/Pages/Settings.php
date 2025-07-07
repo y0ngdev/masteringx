@@ -213,14 +213,14 @@ class Settings extends Page
                                     ->label('Stripe Secret Key')
                                     ->required(),
 
-                                Forms\Components\TextInput::make('payments.webhook_secret')
-                                    ->label(' Stripe Webhook Secret ')
-                                    ->required(),
+//                                Forms\Components\TextInput::make('payments.webhook_secret')
+//                                    ->label(' Stripe Webhook Secret ')
+//                                    ->required(),
 
-                                Forms\Components\TextInput::make('payments.webhook')
-                                    ->label('Webhook URL')
-                                    ->disabled()
-                                    ->suffixAction(CopyAction::make()),
+//                                Forms\Components\TextInput::make('payments.webhook')
+//                                    ->label('Webhook URL')
+//                                    ->disabled()
+//                                    ->suffixAction(CopyAction::make()),
                             ]),
 
                         Forms\Components\Tabs\Tab::make('Email Configuration')

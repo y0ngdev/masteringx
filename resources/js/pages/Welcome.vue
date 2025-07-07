@@ -10,10 +10,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plan } from '@/types';
 import { Icon } from '@iconify/vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, usePage } from '@inertiajs/vue3';
 import { ChevronRight } from 'lucide-vue-next';
 
+
 defineProps<{
+    csrf_token: string;
     plan: Plan;
     settings: object;
     testimonials: object;
@@ -60,7 +62,8 @@ defineProps<{
         <!--        Testimonials-->
         <Testimonial :testimonials="testimonials"></Testimonial>
         <!-- Pricing Section -->
-        <Pricing :pricing="plan" />
+
+        <Pricing :pricing="plan" :csrf="csrf_token" />
 
         <!-- FAQ Section -->
         <Faq v-if="settings.landing.faq" :faqs="settings.landing.faq" :email="settings.general.socials.email" />
@@ -71,12 +74,12 @@ defineProps<{
                 <h2 class="text-foreground mb-4 text-3xl font-semibold">Start your Journey today</h2>
                 <p class="text-muted-foreground mb-8 text-xl"></p>
                 <div class="flex flex-col items-center justify-center gap-3 sm:flex-row">
-                    <Link :href="route('home') + '#pricing'">
+                    <a href="#pricing">
                         <Button class="flex items-center gap-2 transition duration-300 hover:scale-105">
                             Buy Now
                             <ChevronRight class="h-4 w-4" />
                         </Button>
-                    </Link>
+                    </a>
                 </div>
             </div>
         </section>

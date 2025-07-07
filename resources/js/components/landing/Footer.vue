@@ -5,7 +5,7 @@ import { computed } from 'vue';
 const props = defineProps<{
     socials: object;
 }>();
-// TODO
+// TODO MAke name dynamic
 const company = {
     name: 'Untitled UI',
     logo: 'U',

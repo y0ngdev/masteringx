@@ -165,7 +165,8 @@ class Lesson extends Model
 
     public function canWatch(?User $user): bool
     {
-        if (!$user || !$user->subscribed()) {
+//        || !$user->subscribed()
+        if (!$user) {
             return (bool)$this->can_preview;
         }
 

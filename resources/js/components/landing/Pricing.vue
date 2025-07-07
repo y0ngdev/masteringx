@@ -1,28 +1,17 @@
-
 <script setup lang="ts">
-
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Check } from 'lucide-vue-next';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plan } from '@/types';
-import { router } from '@inertiajs/vue3';
+import { usePage } from '@inertiajs/vue3';
+import { ArrowRight, Check } from 'lucide-vue-next';
 import { route } from 'ziggy-js';
 
 defineProps<{
     pricing: Plan;
+    csrf: string;
 }>();
 
-const buyPlan = (priceId) => {
-    router.post(
-        route('checkout'),
-        { priceId: priceId },
-        {
-            fresh: true,
-
-
-        },
-    );
-};
+const page = usePage();
 </script>
 
 <template>
@@ -59,19 +48,18 @@ const buyPlan = (priceId) => {
                     </CardContent>
 
                     <CardFooter class="mt-6">
-                        <form method="POST" @submit="buyPlan" class="w-full">
+                        <form method="POST" :action="route('buy')" class="w-full">
                             <input type="hidden" name="priceId" :value="pricing.gateway_meta.stripe" />
+                            <input type="hidden" name="_token" :value="csrf" />
 
                             <Button variant="default" class="group w-full" type="submit">
                                 Buy Now
                                 <ArrowRight class="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                             </Button>
                         </form>
-
                     </CardFooter>
                 </Card>
             </div>
         </div>
     </section>
 </template>
-

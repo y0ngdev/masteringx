@@ -4,6 +4,8 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Link } from '@inertiajs/vue3';
 import { useWindowScroll } from '@vueuse/core';
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { User } from '@/types';
+import NavUser from '@/components/NavUser.vue';
 
 const isOpen = ref(false);
 const isScrolled = ref(false);
@@ -38,6 +40,10 @@ onBeforeUnmount(() => {
     document.removeEventListener('click', handleClickOutside);
     window.removeEventListener('resize', handleResize);
 });
+
+const props = defineProps<{
+    auth: User;
+}>();
 </script>
 
 <template>
@@ -58,6 +64,7 @@ onBeforeUnmount(() => {
                             <div
                                 class="hidden whitespace-nowrap text-base font-semibold tracking-tight text-zinc-800 sm:block md:text-[17px] dark:text-zinc-100"
                             >
+<!--                                todo dynamic-->
                                 Mastering X
                             </div>
                         </a>
@@ -65,10 +72,11 @@ onBeforeUnmount(() => {
                 </div>
 
                 <div class="flex items-center gap-2 text-zinc-500 dark:text-zinc-400">
-                    <div class="items-center space-x-6 text-sm">
+                    <NavUser v-if="props.auth"/>
+                    <div class="items-center space-x-6 text-sm" v-else>
                         <a :href="route('login')" class="text-muted-foreground hover:text-foreground font-medium transition-colors"> Sign in </a>
                         <Button class="transition duration-300 hover:scale-105" size="sm">
-                            <Link :href="route('home')+'#pricing'"> Buy Now </Link>
+                            <Link :href="route('homepage')+'#pricing'"> Buy Now </Link>
                         </Button>
                     </div>
                     <!--                    Todo: only show on mobile-->
