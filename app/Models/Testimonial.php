@@ -17,7 +17,6 @@ class Testimonial extends Model
         'id',
     ];
 
-
     /**
      * Scope the query to only include published testimonial.
      */

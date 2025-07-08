@@ -48,14 +48,14 @@ class UserResource extends Resource
                     ->unique(ignoreRecord: true),
                 Forms\Components\Toggle::make('email_verified')
                     ->label('Email Verified')
-                    ->helperText('Mark this user\'s email as verified')
-                    ->dehydrateStateUsing(fn($state) => $state ? now() : null)
-                    ->dehydrated(fn($state) => filled($state))
+                    ->helperText("Mark this user's email as verified")
+                    ->dehydrateStateUsing(fn ($state) => $state ? now() : null)
+                    ->dehydrated(fn ($state) => filled($state))
                     ->default(false),
                 Forms\Components\TextInput::make('password')
                     ->password()
-                    ->dehydrateStateUsing(fn($state) => Hash::make($state))
-                    ->required(fn(string $context): bool => $context === 'create')
+                    ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                    ->required(fn (string $context): bool => $context === 'create')
                     ->maxLength(255),
                 Forms\Components\Select::make('role')
                     ->options([
@@ -92,9 +92,9 @@ class UserResource extends Resource
     {
         return $table
             ->query(User::query()->withTrashed())
-            ->modifyQueryUsing(fn($query) => $query->when(
+            ->modifyQueryUsing(fn ($query) => $query->when(
                 request()->query('tableFilters.disabled') === 'true',
-                fn($query) => $query->onlyTrashed()
+                fn ($query) => $query->onlyTrashed()
             ))
             ->columns([
                 Tables\Columns\TextColumn::make('name')
@@ -108,7 +108,7 @@ class UserResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('role')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'admin' => 'danger',
                         'learner' => 'success',
                     }),
@@ -119,7 +119,7 @@ class UserResource extends Resource
                     ->falseIcon('heroicon-o-check-circle')
                     ->trueColor('danger')
                     ->falseColor('success')
-                    ->getStateUsing(fn(User $record): bool => $record->trashed()),
+                    ->getStateUsing(fn (User $record): bool => $record->trashed()),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -141,8 +141,8 @@ class UserResource extends Resource
                     ->trueLabel('Disabled users')
                     ->falseLabel('Active users')
                     ->queries(
-                        true: fn($query) => $query->onlyTrashed(),
-                        false: fn($query) => $query->whereNull('deleted_at'),
+                        true: fn ($query) => $query->onlyTrashed(),
+                        false: fn ($query) => $query->whereNull('deleted_at'),
                     ),
             ])
             ->actions([
@@ -158,6 +158,7 @@ class UserResource extends Resource
                                 ->body('Administrator accounts cannot be disabled.')
                                 ->warning()
                                 ->send();
+
                             return;
                         }
 
@@ -170,7 +171,7 @@ class UserResource extends Resource
                             ->success()
                             ->send();
                     })
-                    ->visible(fn(User $record): bool => !$record->trashed() && $record->role !== 'admin'),
+                    ->visible(fn (User $record): bool => ! $record->trashed() && $record->role !== 'admin'),
                 Tables\Actions\Action::make('enable')
                     ->label('Enable')
                     ->icon('heroicon-o-check-circle')
@@ -186,7 +187,7 @@ class UserResource extends Resource
                             ->success()
                             ->send();
                     })
-                    ->visible(fn(User $record): bool => $record->trashed()),
+                    ->visible(fn (User $record): bool => $record->trashed()),
                 Tables\Actions\Action::make('delete')
                     ->label('Delete Permanently')
                     ->icon('heroicon-o-trash')
@@ -202,14 +203,14 @@ class UserResource extends Resource
                             ->success()
                             ->send();
                     })
-                    ->visible(fn(User $record): bool => $record->trashed() && $record->role !== 'admin'),
+                    ->visible(fn (User $record): bool => $record->trashed() && $record->role !== 'admin'),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
                     BulkAction::make('delete')
                         ->requiresConfirmation()
                         ->action(function (Collection $records): void {
-                            $records->each(function (User $record) {
+                            $records->each(function (User $record): void {
                                 if ($record->role !== 'admin') {
                                     $record->forceDelete();
                                     $record->logActivityAsAdmin('user_deleted', "User {$record->name} was permanently deleted");
@@ -220,7 +221,7 @@ class UserResource extends Resource
                     BulkAction::make('disable')
                         ->requiresConfirmation()
                         ->action(function (Collection $records): void {
-                            $records->each(function (User $record) {
+                            $records->each(function (User $record): void {
                                 if ($record->role !== 'admin') {
                                     $record->delete();
                                     $record->logActivityAsAdmin('user_disabled', "User {$record->name} was disabled");
@@ -231,14 +232,14 @@ class UserResource extends Resource
                     BulkAction::make('enable')
                         ->requiresConfirmation()
                         ->action(function (Collection $records): void {
-                            $records->each(function (User $record) {
+                            $records->each(function (User $record): void {
                                 $record->restore();
                                 $record->logActivityAsAdmin('user_enabled', "User {$record->name} was enabled");
                             });
                         })
                         ->deselectRecordsAfterCompletion(),
-                ])
-            ])->checkIfRecordIsSelectableUsing(fn(User $record): bool => $record->role !== 'admin');
+                ]),
+            ])->checkIfRecordIsSelectableUsing(fn (User $record): bool => $record->role !== 'admin');
     }
 
     public static function getPages(): array

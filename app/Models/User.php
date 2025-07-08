@@ -12,7 +12,6 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable implements FilamentUser
 {
-
     use HasFactory;
     use Notifiable;
     use SoftDeletes;
@@ -60,7 +59,7 @@ class User extends Authenticatable implements FilamentUser
     public function disabled(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->trashed(),
+            get: fn () => $this->trashed(),
         );
 
     }
@@ -71,7 +70,7 @@ class User extends Authenticatable implements FilamentUser
     public function emailVerified(): Attribute
     {
         return Attribute::make(
-            get: fn() => filled($this->email_verified_at),
+            get: fn () => filled($this->email_verified_at),
         );
 
     }

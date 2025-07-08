@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Plan;
 use App\Models\Testimonial;
+use App\Models\Transaction;
 use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;
@@ -19,10 +19,10 @@ class IndexController extends Controller
 {
     public function index(): Response
     {
-//        dd( Plan::first());
+        //        dd( Plan::first());
         return Inertia::render('Welcome', [
             'csrf_token' => csrf_token(),
-            'plan' => Plan::first(),
+            'plan' => \App\Models\Plan::query()->first(),
             'testimonials' => Testimonial::published()->orderBy('order')->get()->all(),
         ]);
     }
@@ -35,7 +35,7 @@ class IndexController extends Controller
         Stripe::setApiKey(config('payments.drivers.stripe.secret_key'));
 
         $priceId = $request->input('priceId');
-//        dd($priceId);
+        //        dd($priceId);
 
         $session = Session::create([
             'payment_method_types' => ['card'],
@@ -58,58 +58,47 @@ class IndexController extends Controller
     public function success(Request $request)
     {
 
+        Stripe::setApiKey(config('payments.drivers.stripe.secret_key'));
+
         $sessionId = $request->get('session_id');
 
-        if (!$sessionId) {
-            abort(400, 'Session ID missing');
-        }
+        abort_unless($sessionId, 400, 'Session ID missing');
 
-        Stripe::setApiKey(config('payments.drivers.stripe.secret_key'));
 
         $session = Session::retrieve($sessionId);
 
-
-        if ($session->payment_status !== 'paid') {
-            abort(400, 'Payment not completed');
-        }
+        abort_if($session->payment_status !== 'paid', 400, 'Payment not completed');
 
 
-//        Transaction::create([
-//            'user_id' => $user->id,
-//            'checkout_session_id' => $session['id'],
-//            'payment_intent_id' => $session['payment_intent'],
-//            'customer_id' => $session['customer'],
-//            'amount' => $session['amount_total'] / 100,
-//            'currency' => strtoupper($session['currency']),
-//            'status' => 'successful',
-//            'receipt_url' => $session['payment_intent']['charges']['data'][0]['receipt_url'] ?? null,
-//            'paid_at' => now(),
-//            'metadata' => $session['metadata'] ?? [],
-//        ]);
-
-
-        // Get email and other info from session
         $email = $session->customer_details->email ?? null;
         $name = $session->customer_details->name ?? 'New User';
+        abort_unless($email, 400, 'Customer email not found');
 
-        // Register user (or log them in)
-        $user = User::firstOrCreate(
-            ['email' => $email],
-            ['name' => $name, 'password' => bcrypt(Str::random(16))] // Or send them a password setup link
+
+        $user = User::query()->firstOrCreate(['email' => $email], ['name' => $name, 'password' => bcrypt(Str::random(16))]);
+
+
+        Transaction::firstOrCreate(
+            ['checkout_session_id' => $session['id']],
+            [
+                'user_id' => $user->id,
+                'amount' => $session['amount_total'] / 100,
+                'currency' => strtoupper($session['currency']),
+                'status' => 'successful',
+            ]
         );
 
         Auth::login($user);
-//Todo log transaction
 
-
-
-        Password::sendResetLink(
-            $request->only('email')
-        );
+        Password::sendResetLink(['email' => $user->email]);
 
         return redirect(route('dashboard'))->with('toast', [
             'type' => 'success',
             'message' => 'Welcome! A link to reset your password has been sent',
         ]);
+
+
     }
+
+
 }

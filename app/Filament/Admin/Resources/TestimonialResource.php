@@ -48,7 +48,7 @@ class TestimonialResource extends Resource
                 Forms\Components\FileUpload::make('avatar')
                     ->image()
                     ->directory('testimonials')
-                ->columnSpanFull(),
+                    ->columnSpanFull(),
             ]);
     }
 

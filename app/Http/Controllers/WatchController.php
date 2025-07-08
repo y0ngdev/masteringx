@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ModuleResource;
 use App\Models\Lesson;
 use App\Models\Module;
-use App\Models\Plan;
 use Auth;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -19,17 +18,16 @@ class WatchController extends Controller
             ->orderBy('order')
             ->firstOrFail();
 
-
-        $lessons = Lesson::where('module_id', $module->id)
+        $lessons = \App\Models\Lesson::query()->where('module_id', $module->id)
             ->where('is_published', true)
             ->where('status', 'READY')
             ->get();
 
         $user = Auth::user();
 
-        $lesson = $lessons->first(fn($lesson) => $lesson->canWatch($user));
+        $lesson = $lessons->first(fn ($lesson): bool => $lesson->canWatch($user));
 
-        if (!$lesson) {
+        if (! $lesson) {
             return redirect()->route('home');
         }
 
@@ -40,18 +38,16 @@ class WatchController extends Controller
     public function handle(): Response
     {
         $modules = Module::published()
-            ->with(['lessons' => fn($query) => $query->ready()])
+            ->with(['lessons' => fn ($query) => $query->ready()])
             ->orderBy('order')
             ->get();
-
 
         return Inertia::render('Watch/Show', [
             'lesson' => Lesson::ready()->where('slug', request()->route('slug'))->firstOrFail()->toResource(),
             'modules' => new ModuleResource($modules),
-            'pricing' => Plan::first(),
+            'pricing' => \App\Models\Plan::query()->first(),
 
         ]);
 
     }
-
 }

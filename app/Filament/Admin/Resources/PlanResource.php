@@ -17,8 +17,7 @@ class PlanResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-credit-card';
 
-    protected static ?string $navigationGroup = 'Subscriptions';
-
+    protected static ?string $navigationGroup = 'Payments';
     protected static ?int $navigationSort = 0;
 
     public static function form(Form $form): Form
@@ -31,10 +30,10 @@ class PlanResource extends Resource
                         Forms\Components\TextInput::make('name')
                             ->required()
                             ->maxLength(191),
-                        Forms\Components\TextInput::make('sort_order')
-                            ->required()
-                            ->numeric()
-                            ->default(0),
+//                        Forms\Components\TextInput::make('sort_order')
+//                            ->required()
+//                            ->numeric()
+//                            ->default(0),
                         Forms\Components\Textarea::make('short_description')
                             ->required()
                             ->placeholder('Enter a short description of the plan')
@@ -44,13 +43,13 @@ class PlanResource extends Resource
                             ]),
                         Forms\Components\TagsInput::make('features')
                             ->reorderable()
-                            ->separator(',')
-                            ->splitKeys(['Tab', ' '])
+                            ->splitKeys(['Tab', 'Enter'])
                             ->placeholder('New feature')
                             ->columnSpan([
                                 'default' => 2,
                                 'lg' => 1,
                             ]),
+
                     ])->columns(2),
 
                 Section::make('Plan Pricing')
@@ -58,9 +57,9 @@ class PlanResource extends Resource
                     ->schema([
                         Forms\Components\TextInput::make('price')
                             ->required()
-                            ->numeric()
-                            ->prefix('$')
-                            ->minValue(0),
+
+
+                            ->prefix('$'),
 
                         Forms\Components\KeyValue::make('gateway_meta')
                             ->name('Price id')
@@ -119,7 +118,7 @@ class PlanResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-//                    Tables\Actions\DeleteBulkAction::make(),
+                    //                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -130,15 +129,17 @@ class PlanResource extends Resource
             //
         ];
     }
+
     public static function canCreate(): bool
     {
         return false;
     }
+
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListPlans::route('/'),
-//            'create' => Pages\CreatePlan::route('/create'),
+            //            'create' => Pages\CreatePlan::route('/create'),
             'edit' => Pages\EditPlan::route('/{record}/edit'),
         ];
     }

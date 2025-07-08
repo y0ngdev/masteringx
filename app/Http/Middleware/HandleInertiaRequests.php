@@ -40,10 +40,11 @@ class HandleInertiaRequests extends Middleware
     {
 
         $settings = new SettingsManager;
+
         return [
             ...parent::share($request),
             'name' => Arr::undot($settings->all())['general']['site_name'] ?? config('app.name'),
-            'settings' =>  Arr::undot($settings->all()),
+            'settings' => Arr::undot($settings->all()),
             'auth' => [
                 'user' => $request->user(),
             ],
@@ -51,7 +52,7 @@ class HandleInertiaRequests extends Middleware
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
-            'sidebarOpen' => !$request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'flash' => [
                 'message' => fn () => $request->session()->get('message'),
                 'type' => fn () => $request->session()->get('type', 'default'),

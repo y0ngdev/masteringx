@@ -8,6 +8,10 @@ import { Link, usePage } from '@inertiajs/vue3';
 import { useWindowScroll } from '@vueuse/core';
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
+const props = defineProps<{
+    auth?: User;
+}>();
+
 const isOpen = ref(false);
 const isScrolled = ref(false);
 const { y } = useWindowScroll();
@@ -41,10 +45,6 @@ onBeforeUnmount(() => {
     document.removeEventListener('click', handleClickOutside);
     window.removeEventListener('resize', handleResize);
 });
-
-const props = defineProps<{
-    auth: User;
-}>();
 
 const page = usePage<SharedData>();
 </script>

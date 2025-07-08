@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Unique;
 use Spatie\FilamentMarkdownEditor\MarkdownEditor;
 
-//use App\Services\VimeoService;
+// use App\Services\VimeoService;
 
 class LessonResource extends Resource
 {
@@ -31,10 +31,9 @@ class LessonResource extends Resource
         return $form
             ->schema([
 
-
                 Forms\Components\TextInput::make('title')
                     ->live(onBlur: true)
-                    ->afterStateUpdated(fn(Set $set, ?string $state): mixed => $set('slug', Str::slug($state)))
+                    ->afterStateUpdated(fn (Set $set, ?string $state): mixed => $set('slug', Str::slug($state)))
                     ->required()
                     ->maxLength(255),
 
@@ -51,11 +50,9 @@ class LessonResource extends Resource
 
                 Forms\Components\TextInput::make('position')
                     ->numeric()
-                    ->unique(modifyRuleUsing: function (Unique $rule, callable $get) {
-                        return $rule
-                            ->where('module_id', $get('module_id'))
-                            ->where('position', $get('position'));
-                    })
+                    ->unique(modifyRuleUsing: fn (Unique $rule, callable $get) => $rule
+                        ->where('module_id', $get('module_id'))
+                        ->where('position', $get('position')))
                     ->default(0),
 
                 MarkdownEditor::make('description')
@@ -65,7 +62,6 @@ class LessonResource extends Resource
                     ->placeholder('here you can add all that entails to the video. Summaries, transcription, anything that the video needs')
                     ->columnSpanFull(),
 
-
                 Forms\Components\FileUpload::make('video')
                     ->label('Video File')
                     ->disk(config('filesystems.default'))
@@ -73,13 +69,11 @@ class LessonResource extends Resource
                     ->moveFiles()
                     ->visibility('private')
                     ->hiddenOn('edit')
-                    ->required(fn(string $context): bool => $context === 'create')
-                ,
+                    ->required(fn (string $context): bool => $context === 'create'),
 
                 Forms\Components\Hidden::make('status')->default('processing'),
                 Forms\Components\TextInput::make('disk')->default(config('filesystems.default'))
-                    ->hidden()
-                ,
+                    ->hidden(),
 
                 Forms\Components\TextInput::make('duration')
                     ->numeric()
@@ -88,7 +82,6 @@ class LessonResource extends Resource
                     ->suffix('seconds')
                     ->disabled()
                     ->dehydrated(),
-
 
                 Forms\Components\Toggle::make('can_preview')
                     ->label('Free Preview')
@@ -123,7 +116,7 @@ class LessonResource extends Resource
                     ->label('Free Preview'),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'READY' => 'success',
                         'PROCESSING' => 'warning',
                         'FAILED' => 'danger',
@@ -179,4 +172,3 @@ class LessonResource extends Resource
         ];
     }
 }
-
