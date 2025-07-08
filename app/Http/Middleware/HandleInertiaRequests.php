@@ -42,7 +42,7 @@ class HandleInertiaRequests extends Middleware
         $settings = new SettingsManager;
         return [
             ...parent::share($request),
-            'name' => config('app.name'),
+            'name' => Arr::undot($settings->all())['general']['site_name'] ?? config('app.name'),
             'settings' =>  Arr::undot($settings->all()),
             'auth' => [
                 'user' => $request->user(),

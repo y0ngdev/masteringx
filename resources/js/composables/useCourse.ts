@@ -1,9 +1,6 @@
-import type { Course, Lesson } from '@/types/course';
-import { ref } from 'vue';
+import type { Lesson } from '@/types/course';
 
 export const useCourse = () => {
-
-
     const markLessonComplete = (lessonId: string) => {
         if (!currentCourse.value) return;
 

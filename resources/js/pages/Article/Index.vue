@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import Footer from '@/components/landing/Footer.vue';
 import Navbar from '@/components/landing/Navbar.vue';
-import { Head, Link, usePage } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import { Search as SearchIcon } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
+import Head from '@/components/Head.vue';
 type Article = {
     id: string;
     title: string;

@@ -2,7 +2,6 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plan } from '@/types';
-import { usePage } from '@inertiajs/vue3';
 import { ArrowRight, Check } from 'lucide-vue-next';
 import { route } from 'ziggy-js';
 
@@ -10,8 +9,6 @@ defineProps<{
     pricing: Plan;
     csrf: string;
 }>();
-
-const page = usePage();
 </script>
 
 <template>

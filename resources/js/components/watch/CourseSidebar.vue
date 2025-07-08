@@ -14,12 +14,10 @@ import {
 import { Lesson, Module } from '@/types/course';
 import { Link } from '@inertiajs/vue3';
 import { ChevronDown, ChevronUp, Circle, Lock } from 'lucide-vue-next';
-import { User } from '@/types';
 
 interface Props {
     lesson: Lesson;
     modules: Module;
-
 }
 
 const props = defineProps<Props>();

@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { Button } from '@/components/ui/button';
-import { Link } from '@inertiajs/vue3';
+import type { SharedData } from '@/types';
+import { Link, usePage } from '@inertiajs/vue3';
 import { useWindowScroll } from '@vueuse/core';
 import { Menu, ShoppingCart, X } from 'lucide-vue-next';
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
@@ -45,6 +47,8 @@ const navigation = [
 ];
 
 const isHome = computed(() => window.location.pathname === '/');
+
+const page = usePage<SharedData>();
 </script>
 
 <template>
@@ -58,14 +62,14 @@ const isHome = computed(() => window.location.pathname === '/');
                     <div class="mr-8 flex items-center">
                         <!-- Logo -->
                         <a href="/" class="flex items-center gap-2 transition hover:opacity-80">
-                            <div class="bg-primary flex h-8 w-8 items-center justify-center rounded-lg">
-                                <span class="text-primary-foreground font-medium">M</span>
+                            <div class="flex h-8 w-8 items-center justify-center rounded-lg">
+                                <AppLogoIcon />
                             </div>
 
                             <div
                                 class="hidden whitespace-nowrap text-base font-semibold tracking-tight text-zinc-800 sm:block md:text-[17px] dark:text-zinc-100"
                             >
-                                Mastering X
+                                {{ page.props.name }}
                             </div>
                         </a>
                     </div>
@@ -157,8 +161,6 @@ const isHome = computed(() => window.location.pathname === '/');
                                         Buy Now
                                     </Button>
                                 </Link>
-
-
                             </div>
                         </div>
                     </div>

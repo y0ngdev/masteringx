@@ -1,17 +1,13 @@
 <script setup lang="ts">
+import AppLogoIcon from '@/components/AppLogoIcon.vue';
+import { type SharedData } from '@/types';
+import { usePage } from '@inertiajs/vue3';
 import { Github, Linkedin, Mail, Twitter, Youtube } from 'lucide-vue-next';
 import { computed } from 'vue';
 
-const props = defineProps<{
-    socials: object;
-}>();
-// TODO MAke name dynamic
-const company = {
-    name: 'Untitled UI',
-    logo: 'U',
-};
+const page = usePage<SharedData>();
 
-
+const socials = page.props.settings.general.socials;
 
 const socialLinks = computed(() => {
     const map = {
@@ -32,8 +28,7 @@ const socialLinks = computed(() => {
         },
         youtube: {
             name: 'YouTube',
-            getHref: (v: string) =>
-                `https://youtube.com/${v.startsWith('@') ? v : '@' + v}`,
+            getHref: (v: string) => `https://youtube.com/${v.startsWith('@') ? v : '@' + v}`,
             icon: Youtube,
         },
         github: {
@@ -43,16 +38,14 @@ const socialLinks = computed(() => {
         },
     };
 
-    return Object.entries(props.socials || {})
+    return Object.entries(socials || {})
         .filter(([key, val]) => map[key] && val)
         .map(([key, val]) => ({
             name: map[key].name,
             href: map[key].getHref(val),
             icon: map[key].icon,
         }));
-
 });
-
 </script>
 
 <template>
@@ -61,10 +54,10 @@ const socialLinks = computed(() => {
             <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
                 <!-- Company Logo -->
                 <div class="flex items-center gap-2">
-                    <div class="bg-primary flex h-8 w-8 items-center justify-center rounded-lg">
-                        <span class="text-primary-foreground text-sm font-semibold">{{ company.logo }}</span>
+                    <div class="flex h-8 w-8 items-center justify-center rounded-lg">
+                        <AppLogoIcon />
                     </div>
-                    <span class="text-foreground text-sm font-semibold">{{ company.name }}</span>
+                    <span class="text-foreground text-sm font-semibold"> {{ page.props.name }}</span>
                 </div>
 
                 <!-- Social Links -->

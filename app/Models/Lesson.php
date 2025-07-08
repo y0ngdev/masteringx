@@ -84,7 +84,6 @@ class Lesson extends Model
             'VIMEO' => "https://player.vimeo.com/video/$this->video_source",
             'FILE' => route('watch.stream', [
                 'path' => $this->id . '.m3u8',
-//                'token' => $token,
             ]),
             default => '#',
         };

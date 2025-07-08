@@ -14,5 +14,3 @@ export type Module = {
     title: string;
     lessons: Lesson[];
 };
-
-

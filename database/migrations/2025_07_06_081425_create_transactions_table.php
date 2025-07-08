@@ -13,6 +13,24 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+
+
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+
+
+            $table->string('checkout_session_id')->unique();
+            $table->string('payment_intent_id')->nullable();
+            $table->string('customer_id')->nullable();
+            $table->string('payment_method')->nullable();
+
+
+            $table->enum('type', ['credit', 'debit'])->default('credit');
+            $table->decimal('amount', 15, 2);                    // in major units (e.g. dollars)
+            $table->string('currency', 3)->default('USD');
+            $table->enum('status', ['pending', 'successful', 'failed', 'refunded'])->default('successful');
+
+
+            $table->string('provider')->default('stripe');
             $table->timestamps();
         });
     }

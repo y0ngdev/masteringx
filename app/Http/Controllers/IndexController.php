@@ -73,6 +73,21 @@ class IndexController extends Controller
             abort(400, 'Payment not completed');
         }
 
+
+//        Transaction::create([
+//            'user_id' => $user->id,
+//            'checkout_session_id' => $session['id'],
+//            'payment_intent_id' => $session['payment_intent'],
+//            'customer_id' => $session['customer'],
+//            'amount' => $session['amount_total'] / 100,
+//            'currency' => strtoupper($session['currency']),
+//            'status' => 'successful',
+//            'receipt_url' => $session['payment_intent']['charges']['data'][0]['receipt_url'] ?? null,
+//            'paid_at' => now(),
+//            'metadata' => $session['metadata'] ?? [],
+//        ]);
+
+
         // Get email and other info from session
         $email = $session->customer_details->email ?? null;
         $name = $session->customer_details->name ?? 'New User';
@@ -85,6 +100,9 @@ class IndexController extends Controller
 
         Auth::login($user);
 //Todo log transaction
+
+
+
         Password::sendResetLink(
             $request->only('email')
         );

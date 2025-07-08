@@ -52,8 +52,8 @@ class Settings extends Page
                     'payments' => [
                         'publishable' => config('payments.drivers.stripe.public_key'),
                         'secret' => config('payments.drivers.stripe.secret_key'),
-                        'webhook_secret' => config('payments.drivers.stripe.webhook_secret'),
-                        'webhook' => route('cashier.webhook')
+//                        'webhook_secret' => config('payments.drivers.stripe.webhook_secret'),
+//                        'webhook' => route('cashier.webhook')
 
                     ]
 
@@ -308,7 +308,7 @@ class Settings extends Page
             $this->updateEnv([
                 'STRIPE_KEY' => $d['publishable'],
                 'STRIPE_SECRET' => $d['secret'],
-                'STRIPE_WEBHOOK_SECRET' => $d['webhook_secret'],
+//                'STRIPE_WEBHOOK_SECRET' => $d['webhook_secret'],
 
             ]);
         }

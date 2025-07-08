@@ -2,7 +2,7 @@
 import Footer from '@/components/landing/Footer.vue';
 import Navbar from '@/components/landing/Navbar.vue';
 import { VueMarkdownIt } from '@f3ve/vue-markdown-it';
-import { Head, usePage } from '@inertiajs/vue3';
+import { usePage } from '@inertiajs/vue3';
 import { abbr } from '@mdit/plugin-abbr';
 import { mark } from '@mdit/plugin-mark';
 import { sub } from '@mdit/plugin-sub';
@@ -11,6 +11,7 @@ import { tasklist } from '@mdit/plugin-tasklist';
 import { Calendar, User } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
+import Head from '@/components/Head.vue';
 type Article = {
     id: string;
     title: string;
