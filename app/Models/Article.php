@@ -29,8 +29,6 @@ class Article extends Model
         return $this->belongsTo(User::class, 'author_id');
     }
 
-
-
     /**
      * Scope the query to only include published articles.
      */

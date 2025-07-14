@@ -17,7 +17,6 @@ class SettingsManager
         return Setting::get($key, $default);
     }
 
-
     /**
      * @throws JsonException
      */

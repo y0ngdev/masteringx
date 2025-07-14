@@ -40,6 +40,7 @@ class ArticleResource extends Resource
 
                 MarkdownEditor::make('body')
                     ->fileAttachmentsVisibility('public')
+                    ->fileAttachmentsDirectory('articles')
                     ->required()
                     ->columnSpanFull()
                     ->afterStateUpdated(fn(Set $set, ?string $state): mixed => $set('excerpt', Str::excerpt($state))),

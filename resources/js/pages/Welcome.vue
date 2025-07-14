@@ -10,10 +10,9 @@ import { Button } from '@/components/ui/button';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plan } from '@/types';
 import { Icon } from '@iconify/vue';
-import { Head, Link, usePage } from '@inertiajs/vue3';
 import { ChevronRight } from 'lucide-vue-next';
 
-
+import Head from '@/components/Head.vue';
 defineProps<{
     csrf_token: string;
     plan: Plan;
@@ -22,7 +21,7 @@ defineProps<{
 }>();
 </script>
 <template>
-    <Head title="Welcome" />
+    <Head :title="settings.general.site_description" />
     <div class="bg-background min-h-screen">
         <!-- Navigation -->
         <Navbar />
@@ -85,6 +84,6 @@ defineProps<{
         </section>
 
         <!-- Footer -->
-        <Footer :socials="settings.general.socials" />
+        <Footer />
     </div>
 </template>

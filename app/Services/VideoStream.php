@@ -6,18 +6,21 @@ use InvalidArgumentException;
 
 class VideoStream
 {
-    private string $path;
+    private readonly string $path;
+
     private ?string $stream = null;
+
     private int $buffer = 102400;
+
     private int $start = -1;
+
     private int $end = -1;
+
     private int $size = 0;
 
-    function __construct($filePath)
+    public function __construct(string $filePath)
     {
-        if (!file_exists($filePath)) {
-            throw new InvalidArgumentException("File does not exist: $filePath");
-        }
+        throw_unless(file_exists($filePath), new InvalidArgumentException("File does not exist: {$filePath}"));
 
         $this->path = $filePath;
     }
@@ -25,10 +28,10 @@ class VideoStream
     /**
      *      * Open stream
      *           */
-    private function open()
+    private function open(): void
     {
         $this->stream = fopen($this->path, 'rb');
-        if (!$this->stream) {
+        if ($this->stream === '') {
             http_response_code(500);
             exit('Could not open stream for reading.');
         }
@@ -38,7 +41,7 @@ class VideoStream
     /**
      *      * Set proper header to serve the video content
      *           */
-    private function setHeader()
+    private function setHeader(): void
     {
         ob_get_clean();
 
@@ -46,14 +49,14 @@ class VideoStream
         $this->start = 0;
         $this->end = $this->size - 1;
 
-        header("Content-Type: video/mp4");
-        header("Cache-Control: max-age=2592000, public");
-        header("Expires: " . gmdate('D, d M Y H:i:s', time() + 2592000) . ' GMT');
-        header("Last-Modified: " . gmdate('D, d M Y H:i:s', filemtime($this->path)) . ' GMT');
-        header("Accept-Ranges: bytes");
+        header('Content-Type: video/mp4');
+        header('Cache-Control: max-age=2592000, public');
+        header('Expires: '.gmdate('D, d M Y H:i:s', time() + 2592000).' GMT');
+        header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($this->path)).' GMT');
+        header('Accept-Ranges: bytes');
 
         if (isset($_SERVER['HTTP_RANGE'])) {
-            [, $range] = explode('=', $_SERVER['HTTP_RANGE'], 2);
+            [, $range] = explode('=', (string) $_SERVER['HTTP_RANGE'], 2);
 
             if (str_contains($range, ',')) {
                 header('HTTP/1.1 416 Requested Range Not Satisfiable');
@@ -62,11 +65,11 @@ class VideoStream
             }
 
             if ($range === '-') {
-                $this->start = $this->size - (int)substr($range, 1);
+                $this->start = $this->size - (int) substr($range, 1);
             } else {
                 [$start, $end] = explode('-', $range);
-                $this->start = (int)$start;
-                $this->end = ($end !== '' && is_numeric($end)) ? (int)$end : $this->end;
+                $this->start = (int) $start;
+                $this->end = ($end !== '' && is_numeric($end)) ? (int) $end : $this->end;
             }
 
             // Validate range
@@ -95,7 +98,7 @@ class VideoStream
     /**
      *      * close currently opened stream
      *           */
-    private function end()
+    private function end(): void
     {
         if (is_resource($this->stream)) {
             fclose($this->stream);
@@ -105,12 +108,12 @@ class VideoStream
     /**
      *      * perform the streaming of calculated range
      *           */
-    private function stream()
+    private function stream(): void
     {
         set_time_limit(0);
         $position = $this->start;
 
-        while (!feof($this->stream) && $position <= $this->end) {
+        while (! feof($this->stream) && $position <= $this->end) {
             $bytesToRead = min($this->buffer, $this->end - $position + 1);
             echo fread($this->stream, $bytesToRead);
             flush();
@@ -121,7 +124,7 @@ class VideoStream
     /**
      *      * Start streaming video content
      *           */
-    function start()
+    public function start(): void
     {
         $this->open();
         $this->setHeader();

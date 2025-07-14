@@ -12,30 +12,28 @@ Route::get('/', [IndexController::class, 'index'])->middleware('guest')->name('h
 Route::post('/buy', [IndexController::class, 'buy'])->name('buy');
 Route::get('/stripe/webhook', [IndexController::class, 'success'])->name('buy.success');
 
-
 Route::get('articles/', function () {
     return Inertia::render('Article/Index', [
-        'articles' =>
-            Article::published()->with('user')->latest()
+        'articles' => Article::published()->with('user')->latest()
 //            ->paginate(10)
-                ->get()->map(function ($article) {
-                    return [
-                        'id' => $article->id,
-                        'title' => $article->title,
-                        'excerpt' => $article->excerpt,
-                        'body' => $article->body,
-                        'author' => [
-                            'name' => $article->user->name,
-                        ],
-                        'seo' => [
-                            'title' => $article->seo_title,
-                            'description' => $article->meta_description,
-                            'keywords' => $article->meta_keywords,
-                        ],
-                        'link' => $article->link(),
-                        'createdAt' => $article->created_at->toIso8601String(),
-                    ];
-                }),
+            ->get()->map(function ($article) {
+                return [
+                    'id' => $article->id,
+                    'title' => $article->title,
+                    'excerpt' => $article->excerpt,
+                    'body' => $article->body,
+                    'author' => [
+                        'name' => $article->user->name,
+                    ],
+                    'seo' => [
+                        'title' => $article->seo_title,
+                        'description' => $article->meta_description,
+                        'keywords' => $article->meta_keywords,
+                    ],
+                    'link' => $article->link(),
+                    'createdAt' => $article->created_at->toIso8601String(),
+                ];
+            }),
     ]);
 })->name('articles');
 
@@ -51,5 +49,5 @@ Route::get('watch/{slug}', [WatchController::class, 'handle'])->name('watch.less
 
 Route::get('/stream/{path}', [StreamController::class, 'handle'])->where('path', '.*')->name('watch.stream');
 
-require __DIR__ . '/settings.php';
-require __DIR__ . '/auth.php';
+require __DIR__.'/settings.php';
+require __DIR__.'/auth.php';

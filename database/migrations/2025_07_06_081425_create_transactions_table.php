@@ -11,8 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('transactions', function (Blueprint $table): void {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('checkout_session_id')->unique();
+            $table->string('payment_intent_id')->nullable();
+            $table->decimal('amount', 15, 2);                    // in major units (e.g. dollars)
+            $table->string('currency', 3)->default('USD');
+            $table->enum('status', ['successful'])->default('successful');
             $table->timestamps();
         });
     }

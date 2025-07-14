@@ -15,7 +15,12 @@ const plugin = Autoplay({
 </script>
 
 <template>
-    <Carousel class="mx-auto mb-4 max-w-[800px] max-h-fit  my-20" :plugins="[plugin]" @mouseenter="plugin.stop" @mouseleave="[plugin.reset(), plugin.play()]">
+    <Carousel
+        class="mx-auto my-20 mb-4 max-h-fit max-w-[800px]"
+        :plugins="[plugin]"
+        @mouseenter="plugin.stop"
+        @mouseleave="[plugin.reset(), plugin.play()]"
+    >
         <CarouselContent>
             <CarouselItem v-for="testimonial in testimonials" :key="testimonial.id">
                 <div class="flex flex-col items-center text-center">
@@ -36,13 +41,5 @@ const plugin = Autoplay({
                 </div>
             </CarouselItem>
         </CarouselContent>
-        <!--        <CarouselPrevious />-->
-        <!--        <CarouselNext />-->
     </Carousel>
-
-
-
-
 </template>
-
-

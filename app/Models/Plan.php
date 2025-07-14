@@ -21,14 +21,19 @@ class Plan extends Model
     protected $casts = [
         'features' => 'array',
         'gateway_meta' => 'array',
-        'price' => 'string'
+        'price' => 'float',
     ];
+
 
     protected function price(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => $value ? Number::currency($value, 'USD', locale: 'en_US',precision: 0) : '$0'
+            get: fn($value) => $value
+                ? Number::currency((float) $value, 'USD', locale: 'en_US', precision: 0)
+                : '$0',
+            set: fn($value) =>(float)  preg_replace('/[^\d.]/', '', $value),
         );
     }
+
 
 }

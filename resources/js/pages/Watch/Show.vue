@@ -13,13 +13,14 @@ import { tasklist } from '@mdit/plugin-tasklist';
 import { ref, watchEffect } from 'vue';
 
 import { Button } from '@/components/ui/button';
+import { Toaster } from '@/components/ui/sonner';
 import LockedPlayer from '@/components/watch/LockedPlayer.vue';
 import VideoPlayer from '@/components/watch/VideoPlayer.vue';
 import { Plan } from '@/types';
-import { Link, router, usePage,Head } from '@inertiajs/vue3';
+import { Link, router, usePage } from '@inertiajs/vue3';
 import { toast } from 'vue-sonner';
-import { Toaster } from '@/components/ui/sonner';
 
+import Head from '@/components/Head.vue';
 const props = defineProps<{
     lesson: Lesson;
     modules: Module[];
@@ -56,7 +57,7 @@ watchEffect(() => {
 <template>
     <Toaster position="top-right" />
     <!--    class="mt-32"-->
-    <Head :title="props.lesson.title"/>
+    <Head :title="props.lesson.title" />
     <SidebarProvider>
         <CourseNav :auth="$page.props.auth.user" />
 
@@ -67,7 +68,6 @@ watchEffect(() => {
                 <!-- Video container -->
                 <div class="bg-muted/2 flex flex-1 items-center justify-center">
                     <div class="w-full">
-                        <!--                        @video-ended="handleVideoEnded"-->
                         <VideoPlayer
                             v-if="props.lesson.canWatch"
                             :title="props.lesson.title"
@@ -87,7 +87,7 @@ watchEffect(() => {
                 <!-- Lesson info -->
                 <div class="mx-auto flex w-full flex-1 flex-col gap-6 border-t px-4 py-2.5 pb-48 md:px-6 md:pb-96 md:pt-4 lg:flex-row">
                     <!-- Sidebar Card (Buy Section) -->
-                    <!--                    Todo Hide on auth-->
+
                     <div class="w-full lg:order-2 lg:w-1/3" v-if="!$page.props.auth.user">
                         <Card class="space-y-6 p-6">
                             <div>

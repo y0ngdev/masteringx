@@ -16,29 +16,25 @@ use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 
 class ConvertVideoForStreaming implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    public Lesson $lesson;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * The number of times the job may be attempted.
-     *
-     * @var int
      */
     public int $tries = 5;
 
-    public function __construct(Lesson $lesson)
-    {
-        $this->lesson = $lesson;
-    }
+    public function __construct(public Lesson $lesson) {}
 
     public function handle(): void
     {
         $lowBitrateFormat = (new X264)->setKiloBitrate(500);
         $midBitrateFormat = (new X264)->setKiloBitrate(1500);
         $highBitrateFormat = (new X264)->setKiloBitrate(3000);
-//add
-        $p = 'lessons/' . $this->lesson->module->title . '/' . $this->lesson->title . '/' . $this->lesson->id . '.m3u8';
+        // add
+        $p = 'lessons/'.$this->lesson->module->title.'/'.$this->lesson->title.'/'.$this->lesson->id.'.m3u8';
         FFMpeg::fromDisk($this->lesson->disk)
             ->open($this->lesson->video_source)
             ->exportForHLS()
@@ -47,7 +43,7 @@ class ConvertVideoForStreaming implements ShouldQueue
             ->addFormat($midBitrateFormat)
             ->addFormat($highBitrateFormat)
             ->save($p);
-//TODO ADD VTT suport
+        // TODO ADD VTT suport
         Storage::delete($this->lesson->video_source);
 
         $this->lesson->update([

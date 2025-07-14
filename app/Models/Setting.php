@@ -18,7 +18,6 @@ class Setting extends Model
         static::deleted(static fn () => self::clearCache());
     }
 
-
     /**
      * Get all settings as key => value array.
      */
@@ -26,6 +25,7 @@ class Setting extends Model
     {
         return self::cached();
     }
+
     /**
      * Get a single setting value by key.
      */
@@ -40,16 +40,14 @@ class Setting extends Model
 
     /**
      * Set or update a setting.
+     *
      * @throws JsonException
      */
     public static function set(string $key, $value, string $type = 'string'): void
     {
         $stored = $type === 'json' ? json_encode($value, JSON_THROW_ON_ERROR) : (string) $value;
 
-        static::updateOrCreate(
-            ['key' => $key],
-            ['value' => $stored, 'type' => $type]
-        );
+        static::query()->updateOrCreate(['key' => $key], ['value' => $stored, 'type' => $type]);
 
         self::clearCache();
     }
@@ -59,7 +57,7 @@ class Setting extends Model
      */
     public static function forget(string $key): void
     {
-        static::where('key', $key)->delete();
+        static::query()->where('key', $key)->delete();
         self::clearCache();
     }
 
@@ -70,31 +68,30 @@ class Setting extends Model
     {
         Cache::forget(self::$cacheKey);
     }
+
     /**
      * Shared cache source for both get() and allSettings()
      */
     protected static function cached(): array
     {
-        return Cache::rememberForever(self::$cacheKey, static function () {
-            return static::all()
-                ->keyBy('key')
-                ->map(fn ($setting) => self::cast($setting->value, $setting->type))
-                ->toArray();
-        });
+        return Cache::rememberForever(self::$cacheKey, static fn () => static::all()
+            ->keyBy('key')
+            ->map(fn ($setting) => self::cast($setting->value, $setting->type))
+            ->toArray());
     }
-
 
     /**
      * Cast a value to its expected type.
+     *
      * @throws JsonException
      */
     protected static function cast($value, string $type)
     {
         return match ($type) {
-            'int', 'integer' => (int)$value,
+            'int', 'integer' => (int) $value,
             'bool', 'boolean' => filter_var($value, FILTER_VALIDATE_BOOLEAN),
-            'float' => (float)$value,
-            'json', 'array' => json_decode($value, true, 512, JSON_THROW_ON_ERROR),
+            'float' => (float) $value,
+            'json', 'array' => json_decode((string) $value, true, 512, JSON_THROW_ON_ERROR),
             default => $value,
         };
     }

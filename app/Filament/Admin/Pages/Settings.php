@@ -12,7 +12,6 @@ use Filament\Pages\Page;
 use Jackiedo\DotenvEditor\Exceptions\KeyNotFoundException;
 use Jackiedo\DotenvEditor\Facades\DotenvEditor;
 use JsonException;
-use Webbingbrasil\FilamentCopyActions\Forms\Actions\CopyAction;
 
 class Settings extends Page
 {
@@ -48,15 +47,13 @@ class Settings extends Page
                         'name' => config('mail.from.name'),
                     ],
 
-
                     'payments' => [
                         'publishable' => config('payments.drivers.stripe.public_key'),
                         'secret' => config('payments.drivers.stripe.secret_key'),
-                        'webhook_secret' => config('payments.drivers.stripe.webhook_secret'),
-                        'webhook' => route('cashier.webhook')
+                        //                        'webhook_secret' => config('payments.drivers.stripe.webhook_secret'),
+                        //                        'webhook' => route('cashier.webhook')
 
-                    ]
-
+                    ],
 
                 ]));
     }
@@ -83,7 +80,7 @@ class Settings extends Page
                                     ->label('Site Favicon')
                                     ->image()
                                     ->directory('site'),
-//         TODO:                       add support email. vimeo api key
+                                //         TODO:                       add vimeo api key
 
                                 Forms\Components\TextInput::make('general.socials.email')
                                     ->label('Contact Email'),
@@ -104,16 +101,13 @@ class Settings extends Page
                             ->schema([
                                 Forms\Components\TextInput::make('landing.hero_title')
                                     ->label('Hero Title')
-                                    ->required()
-                                ,
+                                    ->required(),
                                 Forms\Components\TextInput::make('landing.hero_subtitle')
                                     ->label('Hero Subtitle')
-                                    ->required()
-                                ,
+                                    ->required(),
                                 Forms\Components\TextInput::make('landing.hero_cta_text')
                                     ->label('Hero CTA Text')
-                                    ->required()
-                                ,
+                                    ->required(),
                                 Forms\Components\FileUpload::make('landing.hero_image')
                                     ->label("Hero's Image")
                                     ->image()
@@ -122,31 +116,19 @@ class Settings extends Page
 
                                 Forms\Components\TextInput::make('landing.features.section.title')
                                     ->label('Feature Section Title')
-                                    ->required()
-                                ,
+                                    ->required(),
                                 Forms\Components\TextInput::make('landing.features.section.subtitle')
                                     ->label('Feature Section Subtitle')
-                                    ->required()
-                                ,
+                                    ->required(),
                                 Forms\Components\Repeater::make('landing.features.items')
                                     ->label('Feature items')
                                     ->required()
                                     ->schema([
-                                        Forms\Components\TextInput::make('title')
-
-
-                                        ,
-                                        Forms\Components\TextInput::make('description')
-
-
-                                        ,
+                                        Forms\Components\TextInput::make('title'),
+                                        Forms\Components\TextInput::make('description'),
                                         Forms\Components\TextInput::make('icon')
-                                            ->hint(' visit https://icon-sets.iconify.design/')
-
-
-                                        ,
+                                            ->hint(' visit https://icon-sets.iconify.design/'),
                                     ])
-
                                     ->defaultItems(0)
                                     ->columns(3),
 
@@ -174,15 +156,12 @@ class Settings extends Page
                                 Forms\Components\TextInput::make('landing.instructor.socials.github')
                                     ->label("Instructor's Github Handle"),
 
-                                 Forms\Components\TextInput::make('landing.instructor.socials.website')
+                                Forms\Components\TextInput::make('landing.instructor.socials.website')
                                     ->label("Instructor's Website"),
                                 Forms\Components\FileUpload::make('landing.instructor.image')
                                     ->label("Instructor's Image")
                                     ->image()
                                     ->directory('site'),
-
-
-
 
                                 Forms\Components\TextInput::make('landing.faq.title')
                                     ->label('FAQ Title')
@@ -213,14 +192,14 @@ class Settings extends Page
                                     ->label('Stripe Secret Key')
                                     ->required(),
 
-//                                Forms\Components\TextInput::make('payments.webhook_secret')
-//                                    ->label(' Stripe Webhook Secret ')
-//                                    ->required(),
+                                //                                Forms\Components\TextInput::make('payments.webhook_secret')
+                                //                                    ->label(' Stripe Webhook Secret ')
+                                //                                    ->required(),
 
-//                                Forms\Components\TextInput::make('payments.webhook')
-//                                    ->label('Webhook URL')
-//                                    ->disabled()
-//                                    ->suffixAction(CopyAction::make()),
+                                //                                Forms\Components\TextInput::make('payments.webhook')
+                                //                                    ->label('Webhook URL')
+                                //                                    ->disabled()
+                                //                                    ->suffixAction(CopyAction::make()),
                             ]),
 
                         Forms\Components\Tabs\Tab::make('Email Configuration')
@@ -280,13 +259,11 @@ class Settings extends Page
     }
 
     /**
-     *
      * @throws KeyNotFoundException|JsonException
      */
     public function save(SettingsManager $settings): void
     {
         $data = $this->form->getState();
-
 
         if (!empty($data['email'])) {
             $d = $data['email'];
@@ -302,17 +279,24 @@ class Settings extends Page
                 'MAIL_FROM_NAME' => $d['name'],
             ]);
         }
+
+        if (!empty($data['general'])) {
+
+            $this->updateEnv([
+                'APP_NAME' => $data['general']['site_name'],
+            ]);
+        }
+
         if (!empty($data['payments'])) {
             $d = $data['payments'];
 
             $this->updateEnv([
                 'STRIPE_KEY' => $d['publishable'],
                 'STRIPE_SECRET' => $d['secret'],
-                'STRIPE_WEBHOOK_SECRET' => $d['webhook_secret'],
+                //                'STRIPE_WEBHOOK_SECRET' => $d['webhook_secret'],
 
             ]);
         }
-
 
         $this->saveSettingsToDatabase($settings, $data);
 
@@ -350,10 +334,9 @@ class Settings extends Page
     {
         unset($data['email'], $data['payments']);
 
-
         foreach ($data as $group => $groupSettings) {
             foreach ($groupSettings as $key => $value) {
-                $settingKey = "$group.$key";
+                $settingKey = "{$group}.{$key}";
 
                 $type = match (true) {
                     is_bool($value) => 'bool',
@@ -366,5 +349,4 @@ class Settings extends Page
             }
         }
     }
-
 }

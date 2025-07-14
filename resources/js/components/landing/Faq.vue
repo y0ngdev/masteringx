@@ -27,7 +27,7 @@ defineProps<{
                 <!-- Support CTA -->
                 <div class="mt-12 text-center" v-if="email">
                     <p class="text-muted-foreground mb-4">Still have questions?</p>
-                    <Button variant="default" size="lg" as="a" :href="'mailto:'+email"> Contact Support</Button>
+                    <Button variant="default" size="lg" as="a" :href="'mailto:' + email"> Contact Support</Button>
                 </div>
             </div>
         </div>

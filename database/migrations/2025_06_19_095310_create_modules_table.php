@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->integer('order')->unique()->default(0);
-            $table->enum('status',  ['PUBLISHED', 'DRAFT'])->default('DRAFT');
+            $table->enum('status', ['PUBLISHED', 'DRAFT'])->default('DRAFT');
             $table->timestamps();
         });
     }

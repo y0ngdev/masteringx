@@ -2,9 +2,9 @@
 import AuthLayout from '@/layouts/auth/AuthSimpleLayout.vue';
 
 import { Toaster } from '@/components/ui/sonner';
+import { usePage } from '@inertiajs/vue3';
 import { watchEffect } from 'vue';
 import { toast } from 'vue-sonner';
-import { usePage } from '@inertiajs/vue3';
 defineProps<{
     title?: string;
     description?: string;
@@ -25,7 +25,6 @@ watchEffect(() => {
 </script>
 
 <template>
-
     <Toaster position="top-right" />
     <AuthLayout :title="title" :description="description">
         <slot />

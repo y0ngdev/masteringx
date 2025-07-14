@@ -47,15 +47,15 @@ return [
 
         'main' => [
             'client_id' => config('services.vimeo.client_id'),
-            'client_secret' =>config('services.vimeo.client_secret'),
+            'client_secret' => config('services.vimeo.client_secret'),
             'access_token' => config('services.vimeo.access_token'),
         ],
 
-//        'alternative' => [
-//            'client_id' => env('VIMEO_ALT_CLIENT', 'your-alt-client-id'),
-//            'client_secret' => env('VIMEO_ALT_SECRET', 'your-alt-client-secret'),
-//            'access_token' => env('VIMEO_ALT_ACCESS', null),
-//        ],
+        //        'alternative' => [
+        //            'client_id' => env('VIMEO_ALT_CLIENT', 'your-alt-client-id'),
+        //            'client_secret' => env('VIMEO_ALT_SECRET', 'your-alt-client-secret'),
+        //            'access_token' => env('VIMEO_ALT_ACCESS', null),
+        //        ],
 
     ],
 
