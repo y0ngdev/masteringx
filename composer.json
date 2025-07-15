@@ -6,7 +6,7 @@
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "ext-fileinfo": "*",
         "filament/filament": "3.3",
         "inertiajs/inertia-laravel": "^2.0",
@@ -38,10 +38,7 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        },
-        "files": [
-            "bootstrap/php_settings.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {
