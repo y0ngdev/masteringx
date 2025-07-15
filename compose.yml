@@ -20,6 +20,7 @@ services:
     networks:
       - production
 
+
   mysql:
     image: mysql:8.0
     restart: unless-stopped
@@ -51,7 +52,6 @@ services:
     command: [ "php", "/var/www/html/artisan", "horizon" ]
     stop_signal: SIGTERM # Set this for graceful shutdown if you're using fpm-apache or fpm-nginx
     healthcheck:
-      # This is our native healthcheck script for Horizon
       test: [ "CMD", "healthcheck-horizon" ]
       start_period: 10s
 
