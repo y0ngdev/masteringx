@@ -20,7 +20,7 @@ export default defineConfig({
                     includeAbsolute: false,
                 },
                 compilerOptions: {
-                    isCustomElement: (tag) => tag.startsWith('media-'),
+                    // isCustomElement: (tag) => tag.startsWith('media-'),
                 },
             },
         }),
