@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "edd7a364e71a94e4d432fbfac2954cae",
+    "content-hash": "4ff379ef401b0d6ba2a252dd214ba73b",
     "packages": [
         {
             "name": "ankitpokhrel/tus-php",
@@ -2703,6 +2703,86 @@
             "time": "2025-06-17T17:02:22+00:00"
         },
         {
+            "name": "laravel/horizon",
+            "version": "v5.33.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/horizon.git",
+                "reference": "50057bca1f1dcc9fbd5ff6d65143833babd784b3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/horizon/zipball/50057bca1f1dcc9fbd5ff6d65143833babd784b3",
+                "reference": "50057bca1f1dcc9fbd5ff6d65143833babd784b3",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-pcntl": "*",
+                "ext-posix": "*",
+                "illuminate/contracts": "^9.21|^10.0|^11.0|^12.0",
+                "illuminate/queue": "^9.21|^10.0|^11.0|^12.0",
+                "illuminate/support": "^9.21|^10.0|^11.0|^12.0",
+                "nesbot/carbon": "^2.17|^3.0",
+                "php": "^8.0",
+                "ramsey/uuid": "^4.0",
+                "symfony/console": "^6.0|^7.0",
+                "symfony/error-handler": "^6.0|^7.0",
+                "symfony/polyfill-php83": "^1.28",
+                "symfony/process": "^6.0|^7.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.0",
+                "orchestra/testbench": "^7.0|^8.0|^9.0|^10.0",
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^9.0|^10.4|^11.5",
+                "predis/predis": "^1.1|^2.0"
+            },
+            "suggest": {
+                "ext-redis": "Required to use the Redis PHP driver.",
+                "predis/predis": "Required when not using the Redis PHP driver (^1.1|^2.0)."
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Horizon": "Laravel\\Horizon\\Horizon"
+                    },
+                    "providers": [
+                        "Laravel\\Horizon\\HorizonServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-master": "6.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Horizon\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "Dashboard and code-driven configuration for Laravel queues.",
+            "keywords": [
+                "laravel",
+                "queue"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel/horizon/issues",
+                "source": "https://github.com/laravel/horizon/tree/v5.33.1"
+            },
+            "time": "2025-06-16T13:48:30+00:00"
+        },
+        {
             "name": "laravel/prompts",
             "version": "v0.3.5",
             "source": {
@@ -4631,54 +4711,6 @@
                 }
             ],
             "time": "2024-07-20T21:41:07+00:00"
-        },
-        {
-            "name": "pixamo/installer",
-            "version": "v2.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laramaster/installer.git",
-                "reference": "7ef88dad906b808b6d4de4ee23260a7422eb0a2e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laramaster/installer/zipball/7ef88dad906b808b6d4de4ee23260a7422eb0a2e",
-                "reference": "7ef88dad906b808b6d4de4ee23260a7422eb0a2e",
-                "shasum": ""
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "aliases": {
-                        "Installer": "Pixamo\\Installer\\Facades\\Installer"
-                    },
-                    "providers": [
-                        "Pixamo\\Installer\\InstallerServiceProvider",
-                        "Pixamo\\Installer\\PermissionsServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Pixamo\\Installer\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Arafat Hossain",
-                    "email": "harafat949@gmail.com"
-                }
-            ],
-            "description": "pixamo/installer is a Laravel package that makes it easy to install your application with just one click. With this package, you can quickly set up your application's environment, dependencies, and configurations without having to manually run multiple commands or manually edit files. It streamlines the installation process and makes it more efficient, saving you time and effort. It's perfect for both new and experienced developers. Give it a try and see how it can simplify your development process.",
-            "support": {
-                "issues": "https://github.com/laramaster/installer/issues",
-                "source": "https://github.com/laramaster/installer/tree/v2.1.1"
-            },
-            "time": "2023-10-19T08:57:36+00:00"
         },
         {
             "name": "predis/predis",
@@ -12483,8 +12515,9 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.2",
-        "ext-fileinfo": "*"
+        "php": "^8.3",
+        "ext-fileinfo": "*",
+        "ext-pcntl": "*"
     },
     "platform-dev": {},
     "plugin-api-version": "2.6.0"
