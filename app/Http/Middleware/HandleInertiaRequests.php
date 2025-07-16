@@ -6,6 +6,7 @@ use App\Services\SettingsManager;
 use Arr;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Storage;
 use Tighten\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware
@@ -39,12 +40,26 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
 
-        $settings = new SettingsManager;
+        $settingsManager = new SettingsManager;
+
+        $settings = Arr::undot($settingsManager->all());
+
+        if (!empty($settings['general']['site_logo'])) {
+            $settings['general']['site_logo'] = Storage::disk('public')->url($settings['general']['site_logo']);
+        }  if (!empty($settings['general']['site_favicon'])) {
+            $settings['general']['site_favicon'] = Storage::disk('public')->url($settings['general']['site_favicon']);
+        }
+        if (!empty($settings['landing']['hero_image'])) {
+            $settings['landing']['hero_image'] = Storage::disk('public')->url($settings['landing']['hero_image']);
+        }
+        if (!empty($settings['landing']['instructor'])) {
+            $settings['landing']['instructor']['image'] = Storage::disk('public')->url($settings['landing']['instructor']['image']);
+        }
 
         return [
             ...parent::share($request),
-            'name' => Arr::undot($settings->all())['general']['site_name'] ?? config('app.name'),
-            'settings' => Arr::undot($settings->all()),
+            'name' => $settings['general']['site_name'] ?? config('app.name'),
+            'settings' => $settings,
             'auth' => [
                 'user' => $request->user(),
             ],
@@ -52,11 +67,11 @@ class HandleInertiaRequests extends Middleware
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
-            'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'sidebarOpen' => !$request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'flash' => [
-                'message' => fn () => $request->session()->get('message'),
-                'type' => fn () => $request->session()->get('type', 'default'),
-                'description' => fn () => $request->session()->get('description'),
+                'message' => fn() => $request->session()->get('message'),
+                'type' => fn() => $request->session()->get('type', 'default'),
+                'description' => fn() => $request->session()->get('description'),
             ],
         ];
     }

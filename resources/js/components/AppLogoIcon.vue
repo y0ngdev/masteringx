@@ -16,5 +16,6 @@ const page = usePage<SharedData>();
 </script>
 
 <template>
-    <img :src="`/${page.props.settings.general.site_logo}`" alt="Site logo" :class="className" v-bind="$attrs" />
+<!--    {{route('')}}-->
+    <img :src="`${page.props.settings.general.site_logo}`" alt="Site logo" :class="className" v-bind="$attrs" />
 </template>

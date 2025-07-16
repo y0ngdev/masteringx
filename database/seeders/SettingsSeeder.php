@@ -28,7 +28,7 @@ class SettingsSeeder extends Seeder
             [
                 'id' => 36,
                 'key' => 'general.site_logo',
-                'value' => 'storage/site/01JZMM9BDX16EM4A97T4WPFPNF.png',
+                'value' => 'site/01JZMM9BDX16EM4A97T4WPFPNF.png',
                 'type' => 'string',
                 'created_at' => '2025-07-01 10:59:49',
                 'updated_at' => '2025-07-08 09:01:24',
@@ -36,7 +36,7 @@ class SettingsSeeder extends Seeder
             [
                 'id' => 37,
                 'key' => 'general.site_favicon',
-                'value' => 'storage/site/01JZMM9BJHAGEQSFVYDZENAB07.png',
+                'value' => 'site/01JZMM9BJHAGEQSFVYDZENAB07.png',
                 'type' => 'string',
                 'created_at' => '2025-07-01 10:59:49',
                 'updated_at' => '2025-07-08 09:01:24',
@@ -132,25 +132,15 @@ class SettingsSeeder extends Seeder
                 'id' => 48,
                 'key' => 'general.socials',
                 'value' => json_encode([
-                    "email" => "masteringx@gmail.com",
+                    "email" => "masteringx@example.com",
                     "twitter" => "y0ngdevdeveloper",
-                    "linkedin" => "y0ngdev",
+                    "linkedin" => "yongdev",
                     "youtube" => "@y0ngdev",
-                    "github" => null
+                    "github" => "y0ngdev"
                 ]),
                 'type' => 'json',
                 'created_at' => '2025-07-01 11:56:46',
                 'updated_at' => '2025-07-03 14:02:51',
-            ],
-            [
-                'id' => 50,
-                'key' => 'general.',
-                'value' => json_encode([
-                    "socials" => ["github" => "@y0ngdev"]
-                ]),
-                'type' => 'json',
-                'created_at' => '2025-07-01 12:12:10',
-                'updated_at' => '2025-07-01 12:12:10',
             ],
             [
                 'id' => 51,
@@ -169,7 +159,7 @@ class SettingsSeeder extends Seeder
                         "github" => "y0ngdev",
                         "website" => "https://masteringx.test/"
                     ],
-                    "image" => "storage/site/01JZ8AB6GXXTZFF1CM7DEXXJX1.jpg"
+                    "image" => "site/01JZ8AB6GXXTZFF1CM7DEXXJX1.jpg"
                 ]),
                 'type' => 'json',
                 'created_at' => '2025-07-03 14:02:51',
@@ -178,7 +168,7 @@ class SettingsSeeder extends Seeder
             [
                 'id' => 52,
                 'key' => 'landing.hero_image',
-                'value' => 'storage/site/01JZD1908Q6A7AN13T23QF2QT3.jpg',
+                'value' => 'site/01JZD1908Q6A7AN13T23QF2QT3.jpg',
                 'type' => 'string',
                 'created_at' => '2025-07-05 10:14:27',
                 'updated_at' => '2025-07-05 10:14:27',

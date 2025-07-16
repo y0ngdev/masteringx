@@ -20,7 +20,7 @@ const title = computed(() => (props.title ? `${props.title} - ${appName.value}` 
 
 <template>
     <Head :title="title">
-        <link rel="icon" :href="`/${page.props.settings.general.site_logo}`" type="image/svg+xml" />
+        <link rel="icon" :href="`${page.props.settings.general.site_logo}`" type="image/svg+xml" />
 
         <slot />
     </Head>

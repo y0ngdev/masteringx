@@ -75,11 +75,13 @@ class Settings extends Page
                                 Forms\Components\FileUpload::make('general.site_logo')
                                     ->label('Site Logo')
                                     ->image()
+                                    ->visibility('public')
                                     ->directory('site'),
                                 Forms\Components\FileUpload::make('general.site_favicon')
                                     ->label('Site Favicon')
                                     ->image()
                                     ->directory('site'),
+
                                 //         TODO:                       add vimeo api key
 
                                 Forms\Components\TextInput::make('general.socials.email')
