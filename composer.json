@@ -14,7 +14,7 @@
         "jackiedo/dotenv-editor": "^1.1",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
-        "laravel/horizon": "^5.21.2",
+        "laravel/horizon": "^5.31",
         "league/flysystem-aws-s3-v3": "3.0",
         "pbmedia/laravel-ffmpeg": "^8.7",
         "spatie/filament-markdown-editor": "^2.0",
