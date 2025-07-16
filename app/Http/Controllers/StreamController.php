@@ -29,7 +29,7 @@ class StreamController extends Controller
         $file = basename((string) $path);
         $absolute = Storage::disk(config('filesystems.default'))->path($videoBasePath.'/'.$file);
 
-        dd($absolute);
+//        dd($absolute);
 
         abort_unless(file_exists($absolute), 404);
 

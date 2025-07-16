@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
-import { ArrowRight, PlayCircle } from 'lucide-vue-next';
 import { Link } from '@inertiajs/vue3';
+import { ArrowRight, PlayCircle } from 'lucide-vue-next';
 
 defineProps<{
     title: string;
@@ -12,8 +12,7 @@ defineProps<{
 </script>
 
 <template>
-    <div
-        class="bg-background relative flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center overflow-hidden">
+    <div class="bg-background relative flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center overflow-hidden">
         <!-- Content Container -->
         <div class="pb-16 pt-32">
             <div class="mx-auto max-w-[1280px] px-6">
@@ -40,8 +39,7 @@ defineProps<{
 
                 <!-- Dashboard Preview -->
                 <div class="relative mx-auto max-w-[1000px]">
-                    <div
-                        class="bg-card text-card-foreground aspect-[16/10] overflow-hidden rounded-2xl border shadow-2xl ring-1 ring-gray-900/10">
+                    <div class="bg-card text-card-foreground aspect-[16/10] overflow-hidden rounded-2xl border shadow-2xl ring-1 ring-gray-900/10">
                         <div class="absolute inset-0 bg-gradient-to-t from-gray-900/10 to-gray-900/5"></div>
                         <img
                             :src="landingImage"
@@ -52,15 +50,13 @@ defineProps<{
                     </div>
                     <!-- Decorative elements -->
                     <div class="absolute inset-0 -z-10 scale-[1.15] opacity-30 blur-lg dark:opacity-20">
-                        <div
-                            class="bg-primary/40 absolute -top-10 left-0 h-72 w-72 rounded-full opacity-70 mix-blend-multiply blur-2xl filter"></div>
+                        <div class="bg-primary/40 absolute -top-10 left-0 h-72 w-72 rounded-full opacity-70 mix-blend-multiply blur-2xl filter"></div>
                         <div
                             class="bg-primary/40 absolute -top-10 right-0 h-72 w-72 rounded-full opacity-70 mix-blend-multiply blur-2xl filter"
                         ></div>
                     </div>
                     <!-- Browser-like top bar for more realism -->
-                    <div
-                        class="bg-card/80 absolute left-0 right-0 top-0 flex h-8 items-center rounded-t-2xl border-b px-4 backdrop-blur-sm">
+                    <div class="bg-card/80 absolute left-0 right-0 top-0 flex h-8 items-center rounded-t-2xl border-b px-4 backdrop-blur-sm">
                         <div class="flex space-x-2">
                             <div class="h-3 w-3 rounded-full bg-red-400"></div>
                             <div class="h-3 w-3 rounded-full bg-yellow-400"></div>

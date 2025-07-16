@@ -64,7 +64,6 @@ class LessonResource extends Resource
 
                 Forms\Components\FileUpload::make('video')
                     ->label('Video File')
-                    ->disk(config('filesystems.default'))
                     ->directory('lessons-temp')
                     ->moveFiles()
                     ->visibility('private')

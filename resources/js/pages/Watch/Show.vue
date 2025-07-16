@@ -15,12 +15,14 @@ import { ref, watchEffect } from 'vue';
 import { Button } from '@/components/ui/button';
 import { Toaster } from '@/components/ui/sonner';
 import LockedPlayer from '@/components/watch/LockedPlayer.vue';
-import VideoPlayer from '@/components/watch/VideoPlayer.vue';
+
 import { Plan } from '@/types';
 import { Link, router, usePage } from '@inertiajs/vue3';
 import { toast } from 'vue-sonner';
 
 import Head from '@/components/Head.vue';
+import VidStack from '@/components/watch/VidStack.vue';
+
 const props = defineProps<{
     lesson: Lesson;
     modules: Module[];
@@ -31,7 +33,7 @@ function handleVideoEnded() {
     const allLessons = props.modules.flatMap((m) => m.lessons);
     const currentIndex = allLessons.findIndex((l) => l.id === props.lesson.id);
     const nextLesson = allLessons.slice(currentIndex + 1).find((l) => l.canWatch);
-
+    console.log('Redirecting to:');
     if (nextLesson) {
         console.log('Redirecting to:', nextLesson.url);
         router.visit(nextLesson.url);
@@ -58,6 +60,7 @@ watchEffect(() => {
     <Toaster position="top-right" />
     <!--    class="mt-32"-->
     <Head :title="props.lesson.title" />
+
     <SidebarProvider>
         <CourseNav :auth="$page.props.auth.user" />
 
@@ -68,12 +71,9 @@ watchEffect(() => {
                 <!-- Video container -->
                 <div class="bg-muted/2 flex flex-1 items-center justify-center">
                     <div class="w-full">
-                        <VideoPlayer
-                            v-if="props.lesson.canWatch"
-                            :title="props.lesson.title"
-                            :src="props.lesson.streamURL"
-                            @video-ended="handleVideoEnded"
-                        />
+                        <Suspense v-if="props.lesson.canWatch">
+                            <VidStack :title="props.lesson.title" :src="props.lesson.streamURL" @video-ended="handleVideoEnded" />
+                        </Suspense>
                         <LockedPlayer v-else />
                     </div>
                 </div>

@@ -3,8 +3,9 @@ import vue from '@vitejs/plugin-vue';
 import laravel from 'laravel-vite-plugin';
 import path from 'path';
 import tailwindcss4 from 'tailwindcss-v4';
+
 import { defineConfig } from 'vite';
-import { vite as vidstack } from 'vidstack/plugins';
+
 export default defineConfig({
     plugins: [
         laravel({
@@ -13,6 +14,7 @@ export default defineConfig({
             refresh: true,
         }),
         tailwindcss(tailwindcss4),
+
         vue({
             template: {
                 transformAssetUrls: {
@@ -24,7 +26,8 @@ export default defineConfig({
                 },
             },
         }),
-        vidstack()
+
+
     ],
     css: {
         postcss: null,
