@@ -3,7 +3,7 @@ FROM serversideup/php:8.3-fpm-nginx AS base
 USER root
 
 
-RUN install-php-extensions fileinfo gd pgsql mysqli intl
+RUN install-php-extensions fileinfo gd pgsql mysqli intl pcntl
 
 # Install additional system packages not found in base image
 RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
