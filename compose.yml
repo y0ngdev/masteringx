@@ -1,72 +1,63 @@
 services:
-  nginx:
-    image: 'nginx:latest'
-    restart: always
-    ports:
-      - '80:80'
-    volumes:
-      - './docker/nginx/conf.d/nginx.conf:/etc/nginx/conf.d/default.conf' # TODO:
-      - './public:/var/www/html/public'
-      - './storage:/var/www/html/storage'
-    depends_on:
-      - colibriplus
-    container_name: colibriplus-nginx
-  colibriplus:
+  app:
+    container_name: masteringx-app
+    image: my/laravel-app
     build:
       context: .
-      dockerfile: docker/colibriplus/Dockerfile
-    volumes:
-      - './:/var/www/html'
-      - './docker/colibriplus/php.ini:/usr/local/etc/php/conf.d/colibriplus-php.ini'
-      - './docker/colibriplus/opcache.ini:/usr/local/etc/php/conf.d/colibriplus-opcache.ini'
-    stdin_open: true
-    tty: true
-    expose:
-      - '9000'
-    container_name: colibriplus-app
-    depends_on:
-      - database
-  database:
-    image: mysql
-    restart: always
-    volumes:
-      - './docker/database/mysql/data:/var/lib/mysql'
+      dockerfile: docker/Dockerfile
     ports:
-      - '3306:3306'
+      - "80:8080"   # maps host port 80 → container's port 8080 (HTTP)
+      - "443:8443"  # maps host port 443 → container's port 8443 (HTTPS)
     environment:
-      - MYSQL_ROOT_PASSWORD=admin
-      - MYSQL_DATABASE=colibriplus
-    container_name: colibriplus-db
-  node:
-    image: 'node:latest'
-    working_dir: /var/www/html
+      SSL_MODE: "full"
+      PHP_OPCACHE_ENABLE: 1
+      AUTORUN_ENABLED: "true"
+    restart: unless-stopped
     volumes:
-      - './:/var/www/html'
-    container_name: colibriplus-node
-    command: 'sh -c "npm install && npm run build"'
+      - storage:/var/www/html/storage
+    depends_on:
+      - mysql
+    networks:
+      - production
+
+
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    container_name: mysql
     ports:
-      - '5173:5173'
-    depends_on:
-      - colibriplus
-  horizon:
-    build:
-      context: .
-      dockerfile: docker/colibriplus/Dockerfile
+      - '${FORWARD_DB_PORT:-3306}:3306'
+    environment:
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
     volumes:
-      - './:/var/www/html'
-    depends_on:
-      - redis
-    command: 'php artisan horizon'
-    container_name: colibriplus-horizon
+      - mysql-data:/var/lib/mysql
+    networks:
+      - production
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}" ]
+      retries: 10
+      interval: 20s
+      timeout: 5s
+      start_period: 30s
   redis:
-    image: 'redis:latest'
-    container_name: colibriplus-redis
-    ports:
-      - '6379:6379'
+    image: redis:6
+    command: "redis-server --appendonly yes --requirepass redispassword"
+
+  horizon:
+    image: my/laravel-app
+    command: [ "php", "/var/www/html/artisan", "horizon" ]
+    stop_signal: SIGTERM # Set this for graceful shutdown if you're using fpm-apache or fpm-nginx
+    healthcheck:
+      test: [ "CMD", "healthcheck-horizon" ]
+      start_period: 10s
+
 volumes:
-  sail-mysql:
-    driver: local
+  storage:
+  mysql-data:
 
 networks:
-  sail:
-    driver: bridge
+  production:
