@@ -1,7 +1,7 @@
 services:
   app:
     container_name: masteringx-app
-    image: my/laravel-app
+    image: masteringx-app
     build:
       context: .
       dockerfile: docker/Dockerfile
@@ -48,13 +48,15 @@ services:
     command: "redis-server --appendonly yes --requirepass redispassword"
 
   horizon:
-    image: my/laravel-app
+    image: masteringx-app
     command: [ "php", "/var/www/html/artisan", "horizon" ]
     stop_signal: SIGTERM # Set this for graceful shutdown if you're using fpm-apache or fpm-nginx
     healthcheck:
       test: [ "CMD", "healthcheck-horizon" ]
       start_period: 10s
-
+    depends_on:
+      app:
+        condition: service_started
 volumes:
   storage:
   mysql-data:
