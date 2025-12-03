@@ -67,7 +67,7 @@ class LessonResource extends Resource
                     ->directory('lessons-temp')
                     ->moveFiles()
                     ->visibility('private')
-                    ->hiddenOn('edit')
+                    
                     ->required(fn (string $context): bool => $context === 'create'),
 
                 Forms\Components\Hidden::make('status')->default('processing'),
